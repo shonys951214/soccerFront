@@ -17,11 +17,16 @@ export interface TeamMember {
   id: string;
   teamId: string;
   userId: string;
-  userName?: string; // 사용자 이름 (API 응답에 포함될 것으로 예상)
+  name?: string; // 사용자 이름
+  userName?: string; // 사용자 이름 (하위 호환성)
   jerseyNumber?: number;
   role: 'captain' | 'vice_captain' | 'member';
   status: 'active' | 'injured' | 'long_term_absence' | 'short_term_absence';
   joinedAt: string;
+  phone?: string;
+  birthdate?: string;
+  positions?: string[];
+  summary?: string;
 }
 
 export interface TeamStats {

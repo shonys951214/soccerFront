@@ -6,7 +6,9 @@ import { useAuth } from '@/components/providers/AuthProvider';
 import ProfileRegistrationModal from '@/components/auth/ProfileRegistrationModal';
 import Header from '@/components/layout/Header';
 import TabNavigation from '@/components/layout/TabNavigation';
+import MyPage from '@/components/dashboard/MyPage';
 import { usersApi } from '@/lib/api/users.api';
+import { useTeamId } from '@/lib/hooks/useTeamId';
 
 export default function DashboardLayout({
   children,
@@ -15,6 +17,7 @@ export default function DashboardLayout({
 }) {
   const router = useRouter();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { teamId } = useTeamId();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [checkingProfile, setCheckingProfile] = useState(true);
 
@@ -60,7 +63,16 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-gray-50">
       <Header />
       <TabNavigation />
-      <main>{children}</main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row justify-between gap-8">
+          <div className="flex-1 min-w-0">{children}</div>
+          {teamId && (
+            <div className="w-full lg:w-80 flex-shrink-0">
+              <MyPage teamId={teamId} />
+            </div>
+          )}
+        </div>
+      </main>
       <ProfileRegistrationModal
         isOpen={showProfileModal}
         onClose={() => setShowProfileModal(false)}

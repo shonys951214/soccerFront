@@ -74,8 +74,15 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
 
   const handleDelete = async (memberId: string) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
-    // TODO: 삭제 API 호출
-    alert('삭제 기능은 추후 구현 예정입니다.');
+    
+    try {
+      await teamsApi.deleteMember(teamId, memberId);
+      // 목록 새로고침
+      const membersData = await teamsApi.getTeamMembers(teamId);
+      setMembers(membersData);
+    } catch (err: any) {
+      alert(err.response?.data?.message || '팀원 삭제에 실패했습니다.');
+    }
   };
 
   if (isLoading) {
@@ -144,6 +151,7 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
           isOpen={!!selectedMember}
           onClose={() => setSelectedMember(null)}
           member={selectedMember}
+          teamId={teamId}
         />
       )}
 
@@ -158,8 +166,10 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
           isOpen={isAddMemberModalOpen}
           onClose={() => setIsAddMemberModalOpen(false)}
           teamId={teamId}
-          onSuccess={() => {
-            // TODO: 목록 새로고침
+          onSuccess={async () => {
+            // 목록 새로고침
+            const membersData = await teamsApi.getTeamMembers(teamId);
+            setMembers(membersData);
             setIsAddMemberModalOpen(false);
           }}
         />

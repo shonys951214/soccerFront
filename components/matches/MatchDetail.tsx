@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { matchesApi } from '@/lib/api/matches.api';
-import { MatchDetail as MatchDetailType } from '@/lib/types/match.types';
+import { MatchDetail as MatchDetailType, Game } from '@/lib/types/match.types';
 import GameExpandable from './GameExpandable';
 import AttendanceVote from './AttendanceVote';
 import AttendanceStatus from './AttendanceStatus';
@@ -21,7 +22,9 @@ export default function MatchDetail({
   teamId,
   canEdit = false,
 }: MatchDetailProps) {
+  const router = useRouter();
   const [match, setMatch] = useState<MatchDetailType | null>(null);
+  const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -29,8 +32,12 @@ export default function MatchDetail({
     setIsLoading(true);
     setError('');
     try {
-      const data = await matchesApi.getMatch(matchId);
-      setMatch(data);
+      const [matchData, gamesData] = await Promise.all([
+        matchesApi.getMatch(matchId),
+        matchesApi.getMatchGames(matchId).catch(() => []), // 게임 데이터가 없을 수 있음
+      ]);
+      setMatch(matchData);
+      setGames(gamesData);
     } catch (err: any) {
       setError('경기 정보를 불러오는데 실패했습니다.');
     } finally {
@@ -44,6 +51,18 @@ export default function MatchDetail({
 
   const handleVoteSuccess = () => {
     fetchMatch();
+  };
+
+  const handleDelete = async () => {
+    if (!confirm('정말로 이 경기를 삭제하시겠습니까?')) return;
+    
+    try {
+      await matchesApi.deleteMatch(matchId);
+      // 경기 목록 페이지로 이동
+      router.push('/dashboard/matches');
+    } catch (err: any) {
+      alert(err.response?.data?.message || '경기 삭제에 실패했습니다.');
+    }
   };
 
   if (isLoading) {
@@ -88,6 +107,19 @@ export default function MatchDetail({
                   기록 입력
                 </Button>
               </Link>
+              <Link href={`/dashboard/matches/${matchId}/edit`}>
+                <Button variant="outline" size="sm">
+                  수정
+                </Button>
+              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-red-600 border-red-300 hover:bg-red-50"
+                onClick={handleDelete}
+              >
+                삭제
+              </Button>
             </div>
           )}
         </div>
@@ -138,7 +170,7 @@ export default function MatchDetail({
       )}
 
       {/* 게임별 상세 */}
-      {match.games && match.games.length > 0 && (
+      {games.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">게임별 상세</h3>
           <div className="space-y-3">

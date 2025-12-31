@@ -19,5 +19,30 @@ export const usersApi = {
     const response = await apiClient.get<UserProfile>('/users/profile');
     return response.data;
   },
+
+  // 비밀번호 변경
+  changePassword: async (currentPassword: string, newPassword: string): Promise<void> => {
+    await apiClient.put('/users/password', {
+      currentPassword,
+      newPassword,
+    });
+  },
+
+  // 프로필 이미지 업로드
+  uploadProfileImage: async (file: File): Promise<{ imageUrl: string }> => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await apiClient.post<{ imageUrl: string }>('/users/profile/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // 계정 삭제
+  deleteAccount: async (): Promise<void> => {
+    await apiClient.delete('/users/profile');
+  },
 };
 

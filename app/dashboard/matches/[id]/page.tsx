@@ -49,19 +49,17 @@ export default function MatchDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-6">
-          <a
-            href="/dashboard/matches"
-            className="text-blue-600 hover:text-blue-700 text-sm"
-          >
-            ← 경기 목록으로
-          </a>
-        </div>
-        <MatchDetail matchId={matchId} teamId={teamId} canEdit={true} />
+    <>
+      <div className="mb-6">
+        <a
+          href="/dashboard/matches"
+          className="text-blue-600 hover:text-blue-700 text-sm"
+        >
+          ← 경기 목록으로
+        </a>
       </div>
-    </div>
+      <MatchDetail matchId={matchId} teamId={teamId} canEdit={true} />
+    </>
   );
 }
 

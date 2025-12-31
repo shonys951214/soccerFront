@@ -44,5 +44,28 @@ export const teamsApi = {
     const response = await apiClient.get<TeamMember[]>(`/teams/${teamId}/members`);
     return response.data;
   },
+
+  // 특정 팀원 조회
+  getTeamMember: async (teamId: string, memberId: string): Promise<TeamMember> => {
+    const response = await apiClient.get<TeamMember>(`/teams/${teamId}/members/${memberId}`);
+    return response.data;
+  },
+
+  // 팀원 추가
+  addMember: async (teamId: string, data: { userId: string; jerseyNumber?: number; status?: string }): Promise<TeamMember> => {
+    const response = await apiClient.post<TeamMember>(`/teams/${teamId}/members`, data);
+    return response.data;
+  },
+
+  // 팀원 정보 수정
+  updateMember: async (teamId: string, memberId: string, data: { jerseyNumber?: number; role?: string; status?: string }): Promise<TeamMember> => {
+    const response = await apiClient.put<TeamMember>(`/teams/${teamId}/members/${memberId}`, data);
+    return response.data;
+  },
+
+  // 팀원 삭제
+  deleteMember: async (teamId: string, memberId: string): Promise<void> => {
+    await apiClient.delete(`/teams/${teamId}/members/${memberId}`);
+  },
 };
 
