@@ -23,7 +23,14 @@ export default function Header() {
           <div className="flex items-center space-x-2 sm:space-x-4">
             {user && (
               <>
-                <span className="hidden sm:inline text-sm text-gray-700">{user.name}님</span>
+                <div className="flex items-center space-x-2">
+                  <img
+                    src={user.profileImage || '/profile_default_image.png'}
+                    alt={user.name}
+                    className="w-8 h-8 rounded-full object-cover border border-gray-300"
+                  />
+                  <span className="hidden sm:inline text-sm text-gray-700">{user.name}님</span>
+                </div>
                 <Button
                   variant="outline"
                   size="sm"
