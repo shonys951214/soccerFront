@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { matchesApi } from '@/lib/api/matches.api';
-import { MatchListItem } from '@/lib/types/match.types';
+import { MatchListItem as MatchListItemType } from '@/lib/types/match.types';
 import MatchFilter from './MatchFilter';
 import MatchListItem from './MatchListItem';
 import CreateMatchButton from './CreateMatchButton';
@@ -14,7 +14,7 @@ interface MatchListProps {
 }
 
 export default function MatchList({ teamId, canCreate = false }: MatchListProps) {
-  const [matches, setMatches] = useState<MatchListItem[]>([]);
+  const [matches, setMatches] = useState<MatchListItemType[]>([]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [isLoading, setIsLoading] = useState(true);

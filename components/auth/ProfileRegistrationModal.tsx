@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Modal from '@/components/common/Modal';
 import ProfileForm from './ProfileForm';
 import { usersApi } from '@/lib/api/users.api';
-import { useAuth } from '@/components/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
+import { CreateProfileRequest } from '@/lib/types/user.types';
 
 interface ProfileRegistrationModalProps {
   isOpen: boolean;
@@ -17,16 +17,9 @@ export default function ProfileRegistrationModal({
   onClose,
 }: ProfileRegistrationModalProps) {
   const router = useRouter();
-  const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: {
-    name: string;
-    birthdate?: string;
-    phone?: string;
-    positions: string[];
-    summary?: string;
-  }) => {
+  const handleSubmit = async (data: CreateProfileRequest) => {
     setIsLoading(true);
     try {
       await usersApi.createProfile(data);

@@ -3,9 +3,11 @@ import {
   Match,
   MatchListItem,
   MatchDetail,
+  Game,
   CreateMatchRequest,
   UpdateMatchRequest,
   AttendanceVoteRequest,
+  RecordMatchRequest,
   MatchAttendance,
 } from '@/lib/types/match.types';
 

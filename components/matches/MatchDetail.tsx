@@ -64,10 +64,15 @@ export default function MatchDetail({
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} (${weekdays[date.getDay()]})`;
   };
 
-  const getCurrentUserAttendance = () => {
+  const getCurrentUserAttendance = (): 'attending' | 'not_attending' | 'maybe' | undefined => {
     // TODO: 현재 사용자 ID 가져오기
     // 임시로 첫 번째 참석 정보 반환
-    return match.attendances?.[0]?.status;
+    const status = match.attendances?.[0]?.status;
+    // 투표 가능한 상태만 반환 (late, absent는 투표 상태가 아니므로 제외)
+    if (status === 'attending' || status === 'not_attending' || status === 'maybe') {
+      return status;
+    }
+    return undefined;
   };
 
   return (
