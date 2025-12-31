@@ -56,8 +56,16 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
   const filteredMembers = members.filter((member) => {
     // 포지션 필터
     if (selectedPositions.length > 0) {
-      // TODO: member.positions와 비교
-      // 임시로 통과
+      if (!member.positions || member.positions.length === 0) {
+        return false;
+      }
+      // 선택된 포지션 중 하나라도 멤버의 포지션에 포함되어 있으면 통과
+      const hasMatchingPosition = selectedPositions.some((pos) =>
+        member.positions?.includes(pos)
+      );
+      if (!hasMatchingPosition) {
+        return false;
+      }
     }
 
     // 상태 필터

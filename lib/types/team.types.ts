@@ -13,6 +13,8 @@ export interface CreateTeamRequest {
   name: string;
 }
 
+import { Position } from './user.types';
+
 export interface TeamMember {
   id: string;
   teamId: string;
@@ -25,7 +27,7 @@ export interface TeamMember {
   joinedAt: string;
   phone?: string;
   birthdate?: string;
-  positions?: string[];
+  positions?: Position[]; // Position 타입으로 변경
   summary?: string;
 }
 

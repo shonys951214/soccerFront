@@ -4,7 +4,7 @@ import { TeamMember } from '@/lib/types/team.types';
 import { Position } from '@/lib/types/user.types';
 
 interface MemberCardProps {
-  member: TeamMember & { userName?: string; positions?: Position[]; age?: number; phone?: string };
+  member: TeamMember & { age?: number };
   onClick: () => void;
   onDelete?: () => void;
   canDelete?: boolean;
@@ -63,7 +63,7 @@ export default function MemberCard({
               <span className="text-lg font-bold text-gray-600">#{member.jerseyNumber}</span>
             )}
             <h3 className="text-lg font-semibold text-gray-900">
-              {member.userName || '이름 없음'}
+              {member.name || member.userName || '이름 없음'}
             </h3>
             <span
               className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
