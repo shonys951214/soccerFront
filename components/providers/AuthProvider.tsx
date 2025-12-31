@@ -31,8 +31,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profileImage: profile.profileImage,
         provider: 'email', // TODO: 실제 provider 정보 가져오기
       });
-    } catch (error) {
-      // 프로필이 없거나 에러 발생 시 user를 null로 설정
+    } catch (error: any) {
+      // 프로필이 없는 경우 (404)는 user 정보를 유지 (회원가입 직후 프로필 설정 페이지로 가야 함)
+      if (error.response?.status === 404) {
+        // 프로필이 없어도 사용자는 인증된 상태이므로 user 정보는 유지
+        // 단, 이미 user가 없으면 null 유지
+        return;
+      }
+      // 다른 에러인 경우에만 user를 null로 설정
       setUser(null);
     }
   };

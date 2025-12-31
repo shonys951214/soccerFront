@@ -26,36 +26,29 @@ export default function ProfileSetupPage() {
 	const [error, setError] = useState("");
 	const [checkingProfile, setCheckingProfile] = useState(true);
 
-	// 프로필 확인 및 인증 확인
+	// 인증 확인 (프로필은 첫 회원가입 유저는 없으므로 확인 불필요)
 	useEffect(() => {
-		const checkProfile = async () => {
-			if (!authLoading) {
-				if (!isAuthenticated) {
-					// 인증되지 않았으면 로그인 페이지로
-					localStorage.removeItem("token");
-					localStorage.removeItem("teamId");
-					router.push("/login");
-					return;
-				}
-
-				try {
-					// 프로필 정보 확인
-					await usersApi.getProfile();
-					// 프로필이 이미 있으면 클럽 선택 페이지로
-					router.push("/team-select");
-				} catch (error: any) {
-					// 프로필이 없으면 (404) 이 페이지에 머무름
-					if (error.response?.status !== 404) {
-						setError("프로필 정보를 확인하는데 실패했습니다.");
-					}
-				} finally {
-					setCheckingProfile(false);
-				}
+		const checkAuth = async () => {
+			// 인증 로딩이 완료될 때까지 대기
+			if (authLoading) {
+				return;
 			}
+
+			// 토큰 확인
+			const token = localStorage.getItem("token");
+			if (!token) {
+				// 토큰이 없으면 로그인 페이지로
+				localStorage.removeItem("teamId");
+				router.push("/login");
+				return;
+			}
+
+			// 토큰이 있으면 프로필 설정 페이지 표시 (첫 회원가입 유저는 프로필이 없음)
+			setCheckingProfile(false);
 		};
 
-		checkProfile();
-	}, [authLoading, isAuthenticated, router]);
+		checkAuth();
+	}, [authLoading, router]);
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];

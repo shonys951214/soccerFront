@@ -62,7 +62,7 @@ export default function SignupForm() {
 			</Button>
 
 			{/* 카카오 로그인 버튼 (추후 구현) */}
-			<div className="mt-4">
+			<div className="mt-2">
 				<Button
 					type="button"
 					variant="outline"
