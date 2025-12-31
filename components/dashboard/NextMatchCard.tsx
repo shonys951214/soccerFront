@@ -1,12 +1,16 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { NextMatch } from '@/lib/types/dashboard.types';
+import Button from '@/components/common/Button';
 
 interface NextMatchCardProps {
   match?: NextMatch;
 }
 
 export default function NextMatchCard({ match }: NextMatchCardProps) {
+  const router = useRouter();
+
   if (!match) {
     return (
       <div className="bg-white rounded-lg shadow p-6">
@@ -15,6 +19,8 @@ export default function NextMatchCard({ match }: NextMatchCardProps) {
       </div>
     );
   }
+
+  const hasVoted = match.myAttendanceStatus !== undefined && match.myAttendanceStatus !== null;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -74,13 +80,31 @@ export default function NextMatchCard({ match }: NextMatchCardProps) {
         )}
         <div>
           <p className="text-sm text-gray-600 mb-1">내 참석 상태</p>
-          <span
-            className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getAttendanceStatusColor(
-              match.myAttendanceStatus
-            )}`}
-          >
-            {getAttendanceStatusText(match.myAttendanceStatus)}
-          </span>
+          {hasVoted ? (
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getAttendanceStatusColor(
+                match.myAttendanceStatus
+              )}`}
+            >
+              {getAttendanceStatusText(match.myAttendanceStatus)}
+            </span>
+          ) : (
+            <div className="space-y-2">
+              <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-gray-600 bg-gray-50">
+                미투표
+              </span>
+              <div>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => router.push(`/dashboard/matches/${match.id}`)}
+                  className="w-full sm:w-auto"
+                >
+                  투표하러가기
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

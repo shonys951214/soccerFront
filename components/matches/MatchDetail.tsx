@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/providers/AuthProvider';
 import { matchesApi } from '@/lib/api/matches.api';
 import { MatchDetail as MatchDetailType, Game } from '@/lib/types/match.types';
 import GameExpandable from './GameExpandable';
@@ -23,6 +24,7 @@ export default function MatchDetail({
   canEdit = false,
 }: MatchDetailProps) {
   const router = useRouter();
+  const { user } = useAuth();
   const [match, setMatch] = useState<MatchDetailType | null>(null);
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -84,13 +86,25 @@ export default function MatchDetail({
   };
 
   const getCurrentUserAttendance = (): 'attending' | 'not_attending' | 'maybe' | undefined => {
-    // TODO: 현재 사용자 ID 가져오기
-    // 임시로 첫 번째 참석 정보 반환
-    const status = match.attendances?.[0]?.status;
+    if (!user || !match.attendances) {
+      return undefined;
+    }
+    
+    // 현재 사용자의 참석 정보 찾기
+    const userAttendance = match.attendances.find(
+      (attendance) => attendance.userId === user.id
+    );
+    
+    if (!userAttendance) {
+      return undefined;
+    }
+    
     // 투표 가능한 상태만 반환 (late, absent는 투표 상태가 아니므로 제외)
+    const status = userAttendance.status;
     if (status === 'attending' || status === 'not_attending' || status === 'maybe') {
       return status;
     }
+    
     return undefined;
   };
 

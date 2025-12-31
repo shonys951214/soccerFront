@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { teamsApi } from '@/lib/api/teams.api';
-import { TeamMember } from '@/lib/types/team.types';
+import { TeamMember, UserTeam } from '@/lib/types/team.types';
 import { Position } from '@/lib/types/user.types';
 import TeamStatsHeader from './TeamStatsHeader';
 import PositionFilter from './PositionFilter';
@@ -22,6 +22,7 @@ interface TeamMembersProps {
 export default function TeamMembers({ teamId, canManage = false }: TeamMembersProps) {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [stats, setStats] = useState<any>(null);
+  const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
   const [selectedPositions, setSelectedPositions] = useState<Position[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<
     'active' | 'injured' | 'long_term_absence' | 'short_term_absence' | 'all'
@@ -32,15 +33,20 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // 현재 사용자가 팀장인지 확인
+  const isCaptain = userTeam?.role === 'captain';
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [membersData, statsData] = await Promise.all([
+        const [membersData, statsData, userTeamData] = await Promise.all([
           teamsApi.getTeamMembers(teamId),
           teamsApi.getTeamStats(teamId),
+          teamsApi.getMyTeam().catch(() => null), // 실패해도 계속 진행
         ]);
         setMembers(membersData);
         setStats(statsData);
+        setUserTeam(userTeamData);
       } catch (err: any) {
         setError('팀 정보를 불러오는데 실패했습니다.');
       } finally {
@@ -135,9 +141,9 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
       </div>
 
       {/* 선수 목록 */}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {filteredMembers.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
+          <div className="col-span-full text-center py-12 text-gray-500">
             조건에 맞는 선수가 없습니다.
           </div>
         ) : (
@@ -146,8 +152,8 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
               key={member.id}
               member={member}
               onClick={() => handleMemberClick(member)}
-              onDelete={() => handleDelete(member.id)}
-              canDelete={canManage}
+              onDelete={isCaptain ? () => handleDelete(member.id) : undefined}
+              canDelete={isCaptain}
             />
           ))
         )}

@@ -27,8 +27,10 @@ export default function AttendanceVote({
       await matchesApi.voteAttendance(matchId, { status });
       setSelectedStatus(status);
       onVoteSuccess?.();
-    } catch (error) {
-      alert('투표에 실패했습니다.');
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || '투표에 실패했습니다.';
+      alert(errorMessage);
+      console.error('Attendance vote error:', error);
     } finally {
       setIsLoading(false);
     }

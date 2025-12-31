@@ -81,11 +81,9 @@ export default function MyPagePage() {
 		<div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
 			<h1 className="text-xl sm:text-2xl font-bold text-gray-900">마이페이지</h1>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-				{/* 프로필 정보 */}
-				<div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
-					<h2 className="text-base sm:text-lg font-semibold text-gray-800">프로필 정보</h2>
-
+			{/* 프로필 사진 + 팀 정보 */}
+			<div className="bg-white rounded-lg shadow p-4 sm:p-6">
+				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
 					{/* 프로필 사진 */}
 					<div className="flex flex-col items-center space-y-3">
 						<div className="relative">
@@ -117,6 +115,36 @@ export default function MyPagePage() {
 						</label>
 					</div>
 
+					{/* 팀 정보 */}
+					{userTeam && (
+						<div className="flex-1">
+							<h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">내 소속팀</h2>
+							<div className="space-y-2">
+								<div className="flex justify-between">
+									<span className="text-gray-600">팀명</span>
+									<span className="font-medium">{userTeam.teamName}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-gray-600">역할</span>
+									<span className="font-medium">{userTeam.role === "captain" ? "팀장" : userTeam.role === "vice_captain" ? "부팀장" : "팀원"}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="text-gray-600">상태</span>
+									<span className="font-medium">
+										{userTeam.status === "active" ? "활동" : userTeam.status === "injured" ? "부상" : userTeam.status === "long_term_absence" ? "장기 출전 불가" : "단기 출전 불가"}
+									</span>
+								</div>
+							</div>
+						</div>
+					)}
+				</div>
+			</div>
+
+			{/* 프로필 정보 + 소개글 */}
+			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+				{/* 프로필 정보 */}
+				<div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+					<h2 className="text-base sm:text-lg font-semibold text-gray-800">프로필 정보</h2>
 					<div className="space-y-2">
 						<div className="flex justify-between">
 							<span className="text-gray-600">이름</span>
@@ -144,34 +172,15 @@ export default function MyPagePage() {
 								<span className="font-medium">{profile.positions.join(", ")}</span>
 							</div>
 						)}
-						{profile?.summary && (
-							<div className="flex flex-col">
-								<span className="text-gray-600 mb-1">소개</span>
-								<span className="font-medium">{profile.summary}</span>
-							</div>
-						)}
 					</div>
 				</div>
 
-				{/* 팀 정보 */}
-				{userTeam && (
-					<div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
-						<h2 className="text-base sm:text-lg font-semibold text-gray-800">팀 정보</h2>
-						<div className="space-y-2">
-							<div className="flex justify-between">
-								<span className="text-gray-600">팀명</span>
-								<span className="font-medium">{userTeam.teamName}</span>
-							</div>
-							<div className="flex justify-between">
-								<span className="text-gray-600">역할</span>
-								<span className="font-medium">{userTeam.role === "captain" ? "팀장" : userTeam.role === "vice_captain" ? "부팀장" : "팀원"}</span>
-							</div>
-							<div className="flex justify-between">
-								<span className="text-gray-600">상태</span>
-								<span className="font-medium">
-									{userTeam.status === "active" ? "활동" : userTeam.status === "injured" ? "부상" : userTeam.status === "long_term_absence" ? "장기 출전 불가" : "단기 출전 불가"}
-								</span>
-							</div>
+				{/* 소개글 */}
+				{profile?.summary && (
+					<div className="bg-white rounded-lg shadow p-4 sm:p-6 flex flex-col">
+						<h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">소개</h2>
+						<div className="flex-1">
+							<p className="text-sm text-gray-700 line-clamp-10 break-words whitespace-pre-wrap">{profile.summary}</p>
 						</div>
 					</div>
 				)}
