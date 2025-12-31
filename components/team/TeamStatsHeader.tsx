@@ -16,9 +16,9 @@ export default function TeamStatsHeader({ stats }: TeamStatsHeaderProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 mb-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">팀 구성 통계</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 mb-4 sm:mb-6">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">팀 구성 통계</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <StatItem label="총 인원" value={`${stats.totalMembers}명`} />
         <StatItem
           label="평균 연령"
@@ -35,9 +35,9 @@ export default function TeamStatsHeader({ stats }: TeamStatsHeaderProps) {
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="text-center p-4 bg-gray-50 rounded">
-      <p className="text-sm text-gray-600 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-gray-900">{value}</p>
+    <div className="text-center p-3 sm:p-4 bg-gray-50 rounded">
+      <p className="text-xs sm:text-sm text-gray-600 mb-1">{label}</p>
+      <p className="text-xl sm:text-2xl font-bold text-gray-900">{value}</p>
     </div>
   );
 }

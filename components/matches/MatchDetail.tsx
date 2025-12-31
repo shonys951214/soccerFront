@@ -95,13 +95,13 @@ export default function MatchDetail({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* 경기 요약 정보 */}
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">경기 정보</h2>
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900">경기 정보</h2>
           {canEdit && (
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Link href={`/dashboard/matches/${matchId}/record`}>
                 <Button variant="primary" size="sm">
                   기록 입력
@@ -123,7 +123,7 @@ export default function MatchDetail({
             </div>
           )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <p className="text-sm text-gray-600">날짜</p>
             <p className="text-base font-medium text-gray-900">{formatDate(match.date)}</p>
@@ -171,8 +171,8 @@ export default function MatchDetail({
 
       {/* 게임별 상세 */}
       {games.length > 0 && (
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">게임별 상세</h3>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">게임별 상세</h3>
           <div className="space-y-3">
             {match.games.map((game) => (
               <GameExpandable key={game.id} game={game} />

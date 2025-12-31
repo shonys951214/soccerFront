@@ -50,13 +50,13 @@ export default function MyPagePage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">마이페이지</h1>
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">마이페이지</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* 프로필 정보 */}
-        <div className="bg-white rounded-lg shadow p-6 space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800">프로필 정보</h2>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-800">프로필 정보</h2>
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600">이름</span>
@@ -97,8 +97,8 @@ export default function MyPagePage() {
 
         {/* 팀 정보 */}
         {userTeam && (
-          <div className="bg-white rounded-lg shadow p-6 space-y-4">
-            <h2 className="text-lg font-semibold text-gray-800">팀 정보</h2>
+          <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-800">팀 정보</h2>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">팀명</span>
@@ -124,8 +124,8 @@ export default function MyPagePage() {
       </div>
 
       {/* 계정 설정 */}
-      <div className="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800">계정 설정</h2>
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">계정 설정</h2>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
             variant="outline"
@@ -147,8 +147,8 @@ export default function MyPagePage() {
       </div>
 
       {/* 기타 */}
-      <div className="bg-white rounded-lg shadow p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-800">기타</h2>
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
+        <h2 className="text-base sm:text-lg font-semibold text-gray-800">기타</h2>
         <Button
           variant="outline"
           size="md"

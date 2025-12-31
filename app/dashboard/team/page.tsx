@@ -3,7 +3,6 @@
 import TeamMembers from '@/components/team/TeamMembers';
 import { useTeamId } from '@/lib/hooks/useTeamId';
 import Loading from '@/components/common/Loading';
-import TeamNameLink from '@/components/common/TeamNameLink';
 
 export default function TeamPage() {
   const { teamId, isLoading } = useTeamId();
@@ -38,10 +37,7 @@ export default function TeamPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <TeamNameLink />
-      </div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">팀 구성</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">팀 구성</h1>
       <TeamMembers teamId={teamId} canManage={true} />
     </>
   );

@@ -16,28 +16,28 @@ export default function MatchListItem({ match }: MatchListItemProps) {
 
   return (
     <Link href={`/dashboard/matches/${match.id}`}>
-      <div className="bg-white rounded-lg shadow p-4 hover:shadow-lg transition-shadow cursor-pointer">
+      <div className="bg-white rounded-lg shadow p-3 sm:p-4 hover:shadow-lg transition-shadow cursor-pointer">
         <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-4 mb-2">
-              <p className="text-sm text-gray-600">{formatDate(match.date)}</p>
-              <p className="text-lg font-semibold text-gray-900">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+              <p className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">{formatDate(match.date)}</p>
+              <p className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                 vs {match.opponentTeamName}
               </p>
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-600">
-              <span>게임 수: {match.gameCount}</span>
-              <span className="text-green-600">승: {match.wins}</span>
-              <span className="text-gray-600">무: {match.draws}</span>
-              <span className="text-red-600">패: {match.losses}</span>
-              <span>득점: {match.totalGoals}</span>
-              <span>도움: {match.totalAssists}</span>
-              <span>실점: {match.totalOpponentGoals}</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
+              <span className="whitespace-nowrap">게임: {match.gameCount}</span>
+              <span className="text-green-600 whitespace-nowrap">승: {match.wins}</span>
+              <span className="text-gray-600 whitespace-nowrap">무: {match.draws}</span>
+              <span className="text-red-600 whitespace-nowrap">패: {match.losses}</span>
+              <span className="whitespace-nowrap">득점: {match.totalGoals}</span>
+              <span className="whitespace-nowrap">도움: {match.totalAssists}</span>
+              <span className="whitespace-nowrap">실점: {match.totalOpponentGoals}</span>
             </div>
           </div>
-          <div className="ml-4">
+          <div className="ml-2 sm:ml-4 flex-shrink-0">
             <svg
-              className="w-5 h-5 text-gray-400"
+              className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

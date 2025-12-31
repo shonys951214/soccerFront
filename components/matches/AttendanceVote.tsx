@@ -48,9 +48,9 @@ export default function AttendanceVote({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">참석 투표</h3>
-      <div className="flex gap-3">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">참석 투표</h3>
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
         <Button
           variant={selectedStatus === 'attending' ? 'primary' : 'outline'}
           onClick={() => handleVote('attending')}

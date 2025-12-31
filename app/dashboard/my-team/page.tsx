@@ -86,13 +86,13 @@ export default function MyTeamPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">우리 팀 소개</h1>
+    <div className="max-w-4xl mx-auto px-4 sm:px-0">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">우리 팀 소개</h1>
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {/* 팀 로고/사진 */}
         {team.logo ? (
-          <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
+          <div className="w-full h-48 sm:h-64 bg-gray-200 flex items-center justify-center">
             <img
               src={team.logo}
               alt={team.name}
@@ -100,45 +100,45 @@ export default function MyTeamPage() {
             />
           </div>
         ) : (
-          <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-            <div className="text-gray-400 text-6xl">⚽</div>
+          <div className="w-full h-48 sm:h-64 bg-gray-200 flex items-center justify-center">
+            <div className="text-gray-400 text-4xl sm:text-6xl">⚽</div>
           </div>
         )}
 
-        <div className="p-8 space-y-6">
+        <div className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
           {/* 팀명 */}
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">{team.name}</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">{team.name}</h2>
           </div>
 
           {/* 지역 정보 */}
           {team.region && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">지역</h3>
-              <p className="text-lg text-gray-900">{team.region}</p>
+              <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">지역</h3>
+              <p className="text-base sm:text-lg text-gray-900">{team.region}</p>
             </div>
           )}
 
           {/* 팀 설명 */}
           {team.description && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">팀 소개</h3>
-              <p className="text-gray-900 whitespace-pre-wrap">{team.description}</p>
+              <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀 소개</h3>
+              <p className="text-sm sm:text-base text-gray-900 whitespace-pre-wrap break-words">{team.description}</p>
             </div>
           )}
 
           {/* 팀장 정보 */}
           {team.captain && (
             <div>
-              <h3 className="text-sm font-medium text-gray-500 mb-1">팀장</h3>
-              <p className="text-lg text-gray-900">{team.captain.name}</p>
+              <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀장</h3>
+              <p className="text-base sm:text-lg text-gray-900">{team.captain.name}</p>
             </div>
           )}
 
           {/* 팀 시작일 */}
           <div>
-            <h3 className="text-sm font-medium text-gray-500 mb-1">팀 시작일</h3>
-            <p className="text-lg text-gray-900">{formatCreatedDate(team.createdAt)}</p>
+            <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀 시작일</h3>
+            <p className="text-base sm:text-lg text-gray-900">{formatCreatedDate(team.createdAt)}</p>
           </div>
         </div>
       </div>

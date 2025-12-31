@@ -14,9 +14,9 @@ export default function AttendanceStatus({ attendances }: AttendanceStatusProps)
   const absent = attendances.filter((a) => a.status === 'absent');
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">참석 현황</h3>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">참석 현황</h3>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4">
         <StatusItem label="참석" count={attending.length} color="green" />
         <StatusItem label="미정" count={maybe.length} color="yellow" />
         <StatusItem label="불참" count={notAttending.length} color="red" />
@@ -60,9 +60,9 @@ function StatusItem({
   };
 
   return (
-    <div className={`p-3 rounded-lg text-center ${colorClasses[color]}`}>
-      <p className="text-sm font-medium mb-1">{label}</p>
-      <p className="text-2xl font-bold">{count}</p>
+    <div className={`p-2 sm:p-3 rounded-lg text-center ${colorClasses[color]}`}>
+      <p className="text-xs sm:text-sm font-medium mb-1">{label}</p>
+      <p className="text-xl sm:text-2xl font-bold">{count}</p>
     </div>
   );
 }

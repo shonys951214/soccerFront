@@ -48,17 +48,17 @@ export default function JoinTeamList({ onJoin, isLoading = false }: JoinTeamList
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 sm:space-y-3">
       {teams.map((team) => (
         <div
           key={team.id}
-          className="p-4 bg-white rounded-lg border border-gray-200 hover:border-red-500 transition-colors"
+          className="p-3 sm:p-4 bg-white rounded-lg border border-gray-200 hover:border-red-500 transition-colors"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-semibold text-gray-900">{team.name}</h3>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">{team.name}</h3>
               {team.region && (
-                <p className="text-sm text-gray-600 mt-1">{team.region}</p>
+                <p className="text-xs sm:text-sm text-gray-600 mt-1">{team.region}</p>
               )}
             </div>
             <Button
@@ -66,6 +66,7 @@ export default function JoinTeamList({ onJoin, isLoading = false }: JoinTeamList
               size="sm"
               onClick={() => onJoin(team.id)}
               isLoading={isLoading}
+              className="w-full sm:w-auto mt-2 sm:mt-0"
             >
               가입하기
             </Button>

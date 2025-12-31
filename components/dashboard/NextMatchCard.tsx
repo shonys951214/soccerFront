@@ -49,8 +49,8 @@ export default function NextMatchCard({ match }: NextMatchCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">다음 경기</h2>
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">다음 경기</h2>
       <div className="space-y-3">
         <div>
           <p className="text-sm text-gray-600">날짜</p>

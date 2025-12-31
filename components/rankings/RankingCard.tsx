@@ -28,20 +28,20 @@ export default function RankingCard({ player, type }: RankingCardProps) {
 
   return (
     <div
-      className={`flex items-center justify-between p-4 rounded-lg border ${getRankColor(
+      className={`flex items-center justify-between p-3 sm:p-4 rounded-lg border ${getRankColor(
         player.rank
       )}`}
     >
-      <div className="flex items-center gap-4">
-        <div className="w-12 text-center font-bold text-gray-700">
+      <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+        <div className="w-8 sm:w-12 text-center font-bold text-gray-700 text-sm sm:text-base flex-shrink-0">
           {getRankIcon(player.rank)}
         </div>
-        <div>
-          <p className="font-semibold text-gray-900">{player.userName}</p>
+        <div className="min-w-0">
+          <p className="font-semibold text-gray-900 text-sm sm:text-base truncate">{player.userName}</p>
         </div>
       </div>
-      <div className="text-right">
-        <p className="text-2xl font-bold text-gray-900">{formatValue(player.value)}</p>
+      <div className="text-right flex-shrink-0">
+        <p className="text-xl sm:text-2xl font-bold text-gray-900">{formatValue(player.value)}</p>
       </div>
     </div>
   );

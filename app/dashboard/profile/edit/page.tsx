@@ -70,10 +70,10 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">프로필 수정</h1>
+    <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900">프로필 수정</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
             {error}

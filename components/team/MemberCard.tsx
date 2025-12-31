@@ -53,32 +53,32 @@ export default function MemberCard({
 
   return (
     <div
-      className="bg-white rounded-lg shadow p-4 hover:shadow-lg transition-shadow cursor-pointer relative"
+      className="bg-white rounded-lg shadow p-3 sm:p-4 hover:shadow-lg transition-shadow cursor-pointer relative"
       onClick={onClick}
     >
       <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2">
             {member.jerseyNumber && (
-              <span className="text-lg font-bold text-gray-600">#{member.jerseyNumber}</span>
+              <span className="text-base sm:text-lg font-bold text-gray-600">#{member.jerseyNumber}</span>
             )}
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
               {member.name || member.userName || '이름 없음'}
             </h3>
             <span
-              className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+              className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(
                 member.status
               )}`}
             >
               {getStatusText(member.status)}
             </span>
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600">
             {member.positions && (
-              <span>포지션: {getPositionText(member.positions)}</span>
+              <span className="whitespace-nowrap">포지션: {getPositionText(member.positions)}</span>
             )}
-            {member.age && <span>나이: {member.age}세</span>}
-            {member.phone && <span>연락처: {member.phone}</span>}
+            {member.age && <span className="whitespace-nowrap">나이: {member.age}세</span>}
+            {member.phone && <span className="whitespace-nowrap hidden sm:inline">연락처: {member.phone}</span>}
           </div>
         </div>
         {canDelete && onDelete && (

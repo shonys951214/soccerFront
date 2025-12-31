@@ -18,12 +18,12 @@ export default function TeamSelectCard({
   return (
     <button
       onClick={onClick}
-      className="w-full p-8 bg-white rounded-lg border-2 border-gray-200 hover:border-red-500 hover:shadow-lg transition-all text-left"
+      className="w-full p-6 sm:p-8 bg-white rounded-lg border-2 border-gray-200 hover:border-red-500 hover:shadow-lg transition-all text-left"
     >
-      <div className="flex flex-col items-center space-y-4">
-        <div className="text-4xl">{icon}</div>
-        <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-gray-600 text-center">{description}</p>
+      <div className="flex flex-col items-center space-y-3 sm:space-y-4">
+        <div className="text-3xl sm:text-4xl">{icon}</div>
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900">{title}</h3>
+        <p className="text-xs sm:text-sm text-gray-600 text-center">{description}</p>
       </div>
     </button>
   );

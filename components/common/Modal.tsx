@@ -66,15 +66,15 @@ export default function Modal({
       />
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-3 sm:p-4">
         <div
-          className={`relative bg-white rounded-lg shadow-xl ${sizeStyles[size]} w-full`}
+          className={`relative bg-white rounded-lg shadow-xl ${sizeStyles[size]} w-full max-h-[90vh] overflow-y-auto`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">{title}</h3>
               <button
                 onClick={onClose}
                 className="text-gray-400 hover:text-gray-500 focus:outline-none"
@@ -98,11 +98,11 @@ export default function Modal({
           )}
 
           {/* Content */}
-          <div className="p-6">{children}</div>
+          <div className="p-4 sm:p-6">{children}</div>
 
           {/* Footer */}
           {footer && (
-            <div className="flex items-center justify-end gap-3 p-6 border-t">
+            <div className="flex items-center justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t">
               {footer}
             </div>
           )}

@@ -53,8 +53,8 @@ export default function MatchList({ teamId, canCreate = false }: MatchListProps)
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
         <MatchFilter onFilterChange={handleFilterChange} />
         {canCreate && (
           <CreateMatchButton teamId={teamId} onSuccess={handleCreateSuccess} />

@@ -19,9 +19,9 @@ export default function AttendanceSummary({ attendance }: AttendanceSummaryProps
   const total = attendance.attending + attendance.late + attendance.absent;
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">출석관리</h2>
-      <div className="grid grid-cols-3 gap-4">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">출석관리</h2>
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <AttendanceItem
           label="참석"
           value={attendance.attending}
@@ -65,9 +65,9 @@ function AttendanceItem({
   const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
 
   return (
-    <div className={`p-4 rounded-lg ${colorClasses[color]}`}>
-      <p className="text-sm font-medium mb-1">{label}</p>
-      <p className="text-2xl font-bold">{value}</p>
+    <div className={`p-3 sm:p-4 rounded-lg ${colorClasses[color]}`}>
+      <p className="text-xs sm:text-sm font-medium mb-1">{label}</p>
+      <p className="text-xl sm:text-2xl font-bold">{value}</p>
       <p className="text-xs mt-1">{percentage}%</p>
     </div>
   );

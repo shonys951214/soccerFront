@@ -91,8 +91,8 @@ export default function MyPage({ teamId }: MyPageProps) {
   const isCaptain = userTeam?.role === 'captain';
 
   return (
-    <div className="bg-white rounded-lg shadow p-6 space-y-6">
-      <h2 className="text-xl font-bold text-gray-900">마이페이지</h2>
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <h2 className="text-lg sm:text-xl font-bold text-gray-900">마이페이지</h2>
 
       {/* 프로필 정보 */}
       <div className="space-y-4">

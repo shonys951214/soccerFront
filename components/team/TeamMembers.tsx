@@ -102,17 +102,17 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <TeamStatsHeader stats={stats} />
 
       {/* 상단 버튼 */}
-      <div className="flex items-center justify-between">
-        <div className="flex gap-3">
-          <Button variant="primary" onClick={() => setIsInviteModalOpen(true)}>
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+          <Button variant="primary" onClick={() => setIsInviteModalOpen(true)} className="w-full sm:w-auto">
             초대 링크
           </Button>
           {canManage && (
-            <Button variant="outline" onClick={() => setIsAddMemberModalOpen(true)}>
+            <Button variant="outline" onClick={() => setIsAddMemberModalOpen(true)} className="w-full sm:w-auto">
               선수 등록
             </Button>
           )}
@@ -120,7 +120,7 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
       </div>
 
       {/* 필터 */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">포지션</label>
           <PositionFilter

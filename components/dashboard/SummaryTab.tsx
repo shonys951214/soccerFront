@@ -48,16 +48,16 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <NextMatchCard match={data.nextMatch} />
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">팀 구성</h2>
+        <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">팀 구성</h2>
           <div className="space-y-2">
             <p className="text-sm text-gray-600">
               총 인원: <span className="font-semibold text-gray-900">{data.teamComposition.totalMembers}명</span>
             </p>
-            <div className="grid grid-cols-4 gap-2 mt-4">
+            <div className="grid grid-cols-4 gap-2 sm:gap-3 mt-4">
               <div className="text-center p-2 bg-gray-50 rounded">
                 <p className="text-xs text-gray-600">GK</p>
                 <p className="text-lg font-semibold">{data.teamComposition.positionCount.GK}</p>
