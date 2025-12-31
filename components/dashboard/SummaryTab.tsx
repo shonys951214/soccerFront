@@ -79,20 +79,24 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
         </div>
       </div>
 
-      <TeamStatsCard
-        matchStats={data.teamStats.matchStats}
-        gameStats={data.teamStats.gameStats}
-        totalGoals={data.teamStats.totalGoals}
-      />
+      {data.teamStats && (
+        <TeamStatsCard
+          matchStats={data.teamStats.matchStats}
+          gameStats={data.teamStats.gameStats}
+          totalGoals={data.teamStats.totalGoals}
+        />
+      )}
 
-      <Top10List
-        appearances={data.top10.appearances}
-        goals={data.top10.goals}
-        assists={data.top10.assists}
-        winRate={data.top10.winRate}
-      />
+      {data.top10 && (
+        <Top10List
+          appearances={data.top10.appearances}
+          goals={data.top10.goals}
+          assists={data.top10.assists}
+          winRate={data.top10.winRate}
+        />
+      )}
 
-      <AttendanceSummary attendance={data.attendance} />
+      {data.attendance && <AttendanceSummary attendance={data.attendance} />}
     </div>
   );
 }

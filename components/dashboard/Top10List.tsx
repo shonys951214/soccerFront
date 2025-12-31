@@ -3,17 +3,17 @@
 import { Top10Player } from '@/lib/types/dashboard.types';
 
 interface Top10ListProps {
-  appearances: Top10Player[];
-  goals: Top10Player[];
-  assists: Top10Player[];
-  winRate: Top10Player[];
+  appearances?: Top10Player[];
+  goals?: Top10Player[];
+  assists?: Top10Player[];
+  winRate?: Top10Player[];
 }
 
 export default function Top10List({
-  appearances,
-  goals,
-  assists,
-  winRate,
+  appearances = [],
+  goals = [],
+  assists = [],
+  winRate = [],
 }: Top10ListProps) {
   return (
     <div className="bg-white rounded-lg shadow p-6">

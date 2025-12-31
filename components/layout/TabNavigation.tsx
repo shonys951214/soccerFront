@@ -18,7 +18,12 @@ export default function TabNavigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex space-x-8">
           {tabs.map((tab) => {
-            const isActive = pathname === tab.href || pathname?.startsWith(tab.href + '/');
+            // 요약 탭(/dashboard)은 정확히 일치할 때만 활성화
+            // 다른 탭들은 해당 경로로 시작할 때 활성화
+            const isActive =
+              tab.href === '/dashboard'
+                ? pathname === tab.href
+                : pathname === tab.href || pathname?.startsWith(tab.href + '/');
             return (
               <Link
                 key={tab.href}

@@ -69,17 +69,17 @@ export interface DashboardSummary {
       FW: number;
     };
   };
-  teamStats: {
-    matchStats: TeamStats;
-    gameStats: GameStats;
-    totalGoals: TotalGoals;
+  teamStats?: {
+    matchStats?: TeamStats;
+    gameStats?: GameStats;
+    totalGoals?: TotalGoals;
   };
-  top10: {
+  top10?: {
     appearances: Top10Player[];
     goals: Top10Player[];
     assists: Top10Player[];
     winRate: Top10Player[];
   };
-  attendance: AttendanceSummary;
+  attendance?: AttendanceSummary;
 }
 
