@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { usersApi } from "@/lib/api/users.api";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 
@@ -22,7 +23,21 @@ export default function LoginForm() {
 
 		try {
 			await login(email, password);
-			router.push("/dashboard");
+			
+			// 프로필 확인 후 리다이렉트
+			try {
+				await usersApi.getProfile();
+				// 프로필이 있으면 대시보드로
+				router.push("/dashboard");
+			} catch (profileError: any) {
+				// 프로필이 없으면 (404) 프로필 설정 페이지로
+				if (profileError.response?.status === 404) {
+					router.push("/profile/setup");
+				} else {
+					// 다른 에러면 대시보드로 (프로필 확인 실패는 치명적이지 않음)
+					router.push("/dashboard");
+				}
+			}
 		} catch (err: any) {
 			setError(err.response?.data?.message || "로그인에 실패했습니다.");
 		} finally {
@@ -65,12 +80,6 @@ export default function LoginForm() {
 				로그인
 			</Button>
 
-			<div className="text-center">
-				<a href="/signup" className="text-sm text-blue-600 hover:text-blue-500">
-					회원가입
-				</a>
-			</div>
-
 			{/* 카카오 로그인 버튼 (추후 구현) */}
 			<div className="mt-4">
 				<Button
@@ -85,6 +94,12 @@ export default function LoginForm() {
 				>
 					카카오 로그인
 				</Button>
+			</div>
+
+			<div className="text-center mt-4">
+				<a href="/signup" className="text-sm text-blue-600 hover:text-blue-500">
+					회원가입
+				</a>
 			</div>
 		</form>
 	);

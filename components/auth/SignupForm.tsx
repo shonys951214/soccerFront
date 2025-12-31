@@ -36,7 +36,8 @@ export default function SignupForm() {
 
 		try {
 			await signup(email, password, name);
-			router.push("/dashboard");
+			// 회원가입 후 프로필 설정 페이지로 리다이렉트
+			router.push("/profile/setup");
 		} catch (err: unknown) {
 			const errorMessage = err && typeof err === "object" && "response" in err ? (err as { response?: { data?: { message?: string } } }).response?.data?.message : "회원가입에 실패했습니다.";
 			setError(errorMessage || "회원가입에 실패했습니다.");
@@ -60,12 +61,6 @@ export default function SignupForm() {
 				가입하기
 			</Button>
 
-			<div className="text-center">
-				<a href="/login" className="text-sm text-blue-600 hover:text-blue-500">
-					이미 계정이 있으신가요? 로그인
-				</a>
-			</div>
-
 			{/* 카카오 로그인 버튼 (추후 구현) */}
 			<div className="mt-4">
 				<Button
@@ -80,6 +75,12 @@ export default function SignupForm() {
 				>
 					카카오 로그인
 				</Button>
+			</div>
+
+			<div className="text-center mt-4">
+				<a href="/login" className="text-sm text-blue-600 hover:text-blue-500">
+					이미 계정이 있으신가요? 로그인
+				</a>
 			</div>
 		</form>
 	);

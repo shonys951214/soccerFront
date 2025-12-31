@@ -4,29 +4,31 @@ import { useState, useEffect } from 'react';
 
 interface MatchFilterProps {
   onFilterChange: (year: number | null, month: number | null) => void;
+  initialYear?: number | null;
+  initialMonth?: number | null;
 }
 
-export default function MatchFilter({ onFilterChange }: MatchFilterProps) {
+export default function MatchFilter({ onFilterChange, initialYear, initialMonth }: MatchFilterProps) {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
-  const [year, setYear] = useState<number | null>(currentYear);
-  const [month, setMonth] = useState<number | null>(currentMonth);
+  const [year, setYear] = useState<number | null>(initialYear ?? currentYear);
+  const [month, setMonth] = useState<number | null>(initialMonth ?? currentMonth);
   const [showAll, setShowAll] = useState(false);
 
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-  // 초기 마운트 시 한 번 호출
+  // 부모로부터 받은 초기값이 변경되면 동기화
   useEffect(() => {
-    if (showAll) {
-      onFilterChange(null, null);
-    } else {
-      onFilterChange(year, month);
+    if (initialYear !== undefined) {
+      setYear(initialYear);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 초기 마운트 시에만 호출
+    if (initialMonth !== undefined) {
+      setMonth(initialMonth);
+    }
+  }, [initialYear, initialMonth]);
 
-  // year, month, showAll이 변경될 때마다 호출
+  // year, month, showAll이 변경될 때마다 부모에게 알림
   useEffect(() => {
     if (showAll) {
       onFilterChange(null, null);
