@@ -16,8 +16,8 @@ export interface UserProfile {
 
 export interface CreateProfileRequest {
   name: string;
-  birthdate?: string;
-  phone?: string;
+  birthdate: string;
+  phone: string;
   positions: Position[];
   summary?: string;
 }

@@ -44,3 +44,16 @@ export interface UserTeam {
   status: 'active' | 'injured' | 'long_term_absence' | 'short_term_absence';
 }
 
+export interface TeamDetail {
+  id: string;
+  name: string;
+  region?: string;
+  description?: string;
+  logo?: string;
+  captain: {
+    id: string;
+    name: string;
+  } | null;
+  createdAt: string;
+}
+

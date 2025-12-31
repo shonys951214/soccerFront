@@ -22,7 +22,17 @@ export default function Header() {
           </div>
           <div className="flex items-center space-x-4">
             {user && (
-              <span className="text-sm text-gray-700">{user.name}님</span>
+              <>
+                <span className="text-sm text-gray-700">{user.name}님</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-gray-700"
+                  onClick={() => router.push('/dashboard/my-page')}
+                >
+                  마이페이지
+                </Button>
+              </>
             )}
             <Button variant="outline" size="sm" onClick={handleLogout}>
               로그아웃

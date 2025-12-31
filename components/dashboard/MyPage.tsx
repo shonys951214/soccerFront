@@ -21,6 +21,10 @@ export default function MyPage({ teamId }: MyPageProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +50,38 @@ export default function MyPage({ teamId }: MyPageProps) {
   const handleLogout = async () => {
     await logout();
     router.push('/login');
+  };
+
+  const handleLeaveTeam = async () => {
+    if (!userTeam) return;
+    
+    setIsLeaving(true);
+    try {
+      await teamsApi.leaveTeam(userTeam.teamId);
+      localStorage.removeItem('teamId');
+      router.push('/team-select');
+    } catch (error: any) {
+      alert(error.response?.data?.message || '팀 탈퇴에 실패했습니다.');
+    } finally {
+      setIsLeaving(false);
+      setShowLeaveModal(false);
+    }
+  };
+
+  const handleDeleteTeam = async () => {
+    if (!userTeam) return;
+    
+    setIsDeleting(true);
+    try {
+      await teamsApi.deleteTeam(userTeam.teamId);
+      localStorage.removeItem('teamId');
+      router.push('/team-select');
+    } catch (error: any) {
+      alert(error.response?.data?.message || '팀 삭제에 실패했습니다.');
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    }
   };
 
   if (isLoading) {
@@ -147,16 +183,88 @@ export default function MyPage({ teamId }: MyPageProps) {
       <div className="space-y-4 border-t pt-4">
         <h3 className="text-lg font-semibold text-gray-800">기타</h3>
         <div className="space-y-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full text-gray-600"
-            onClick={handleLogout}
-          >
-            로그아웃
-          </Button>
+          {userTeam && !isCaptain && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-red-600 hover:text-red-700 hover:border-red-500"
+              onClick={() => setShowLeaveModal(true)}
+            >
+              팀 탈퇴
+            </Button>
+          )}
+          {userTeam && isCaptain && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-red-600 hover:text-red-700 hover:border-red-500"
+              onClick={() => setShowDeleteModal(true)}
+            >
+              팀 삭제
+            </Button>
+          )}
         </div>
       </div>
+
+      {/* 팀 탈퇴 확인 모달 */}
+      <Modal
+        isOpen={showLeaveModal}
+        onClose={() => setShowLeaveModal(false)}
+        title="팀 탈퇴 확인"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-700">
+            정말로 팀에서 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+          </p>
+          <div className="flex gap-2 justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowLeaveModal(false)}
+            >
+              취소
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleLeaveTeam}
+              isLoading={isLeaving}
+            >
+              탈퇴하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* 팀 삭제 확인 모달 */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="팀 삭제 확인"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-700">
+            정말로 팀을 삭제하시겠습니까? 팀의 모든 데이터가 삭제되며 이 작업은 되돌릴 수 없습니다.
+          </p>
+          <div className="flex gap-2 justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowDeleteModal(false)}
+            >
+              취소
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleDeleteTeam}
+              isLoading={isDeleting}
+            >
+              삭제하기
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

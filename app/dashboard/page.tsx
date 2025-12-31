@@ -3,6 +3,7 @@
 import SummaryTab from '@/components/dashboard/SummaryTab';
 import { useTeamId } from '@/lib/hooks/useTeamId';
 import Loading from '@/components/common/Loading';
+import TeamNameLink from '@/components/common/TeamNameLink';
 
 export default function DashboardPage() {
   const { teamId, isLoading } = useTeamId();
@@ -35,6 +36,13 @@ export default function DashboardPage() {
     );
   }
 
-  return <SummaryTab teamId={teamId} />;
+  return (
+    <>
+      <div className="mb-6">
+        <TeamNameLink />
+      </div>
+      <SummaryTab teamId={teamId} />
+    </>
+  );
 }
 

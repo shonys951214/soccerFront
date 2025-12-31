@@ -3,6 +3,7 @@
 import RankingsList from '@/components/rankings/RankingsList';
 import { useTeamId } from '@/lib/hooks/useTeamId';
 import Loading from '@/components/common/Loading';
+import TeamNameLink from '@/components/common/TeamNameLink';
 
 export default function RankingsPage() {
   const { teamId, isLoading } = useTeamId();
@@ -37,6 +38,9 @@ export default function RankingsPage() {
 
   return (
     <>
+      <div className="mb-6">
+        <TeamNameLink />
+      </div>
       <h1 className="text-2xl font-bold text-gray-900 mb-6">개인 랭크</h1>
       <RankingsList teamId={teamId} />
     </>

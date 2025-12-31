@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Team, CreateTeamRequest, TeamStats, TeamMember, UserTeam } from '@/lib/types/team.types';
+import { Team, CreateTeamRequest, TeamStats, TeamMember, UserTeam, TeamDetail } from '@/lib/types/team.types';
 
 export const teamsApi = {
   // 클럽 생성
@@ -66,6 +66,22 @@ export const teamsApi = {
   // 팀원 삭제
   deleteMember: async (teamId: string, memberId: string): Promise<void> => {
     await apiClient.delete(`/teams/${teamId}/members/${memberId}`);
+  },
+
+  // 팀 탈퇴
+  leaveTeam: async (teamId: string): Promise<void> => {
+    await apiClient.delete(`/teams/${teamId}/leave`);
+  },
+
+  // 팀 삭제 (팀장만 가능)
+  deleteTeam: async (teamId: string): Promise<void> => {
+    await apiClient.delete(`/teams/${teamId}`);
+  },
+
+  // 팀 상세 정보 조회
+  getTeam: async (teamId: string): Promise<TeamDetail> => {
+    const response = await apiClient.get<TeamDetail>(`/teams/${teamId}`);
+    return response.data;
   },
 };
 

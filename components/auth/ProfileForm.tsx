@@ -8,8 +8,8 @@ import { Position } from '@/lib/types/user.types';
 interface ProfileFormProps {
   onSubmit: (data: {
     name: string;
-    birthdate?: string;
-    phone?: string;
+    birthdate: string;
+    phone: string;
     positions: Position[];
     summary?: string;
   }) => Promise<void>;
@@ -33,6 +33,16 @@ export default function ProfileForm({ onSubmit, isLoading = false }: ProfileForm
       return;
     }
 
+    if (!birthdate) {
+      setError('생년월일을 입력해주세요.');
+      return;
+    }
+
+    if (!phone.trim()) {
+      setError('연락처를 입력해주세요.');
+      return;
+    }
+
     if (positions.length === 0) {
       setError('최소 1개 이상의 포지션을 선택해주세요.');
       return;
@@ -41,8 +51,8 @@ export default function ProfileForm({ onSubmit, isLoading = false }: ProfileForm
     try {
       await onSubmit({
         name: name.trim(),
-        birthdate: birthdate || undefined,
-        phone: phone || undefined,
+        birthdate: birthdate,
+        phone: phone.trim(),
         positions,
         summary: summary.trim() || undefined,
       });
@@ -64,25 +74,27 @@ export default function ProfileForm({ onSubmit, isLoading = false }: ProfileForm
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          생년월일
+          생년월일 *
         </label>
         <input
           type="date"
           value={birthdate}
           onChange={(e) => setBirthdate(e.target.value)}
+          required
           className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
         />
       </div>
 
       <Input
         type="tel"
-        label="연락처"
+        label="연락처 *"
         placeholder="010-0000-0000"
         value={phone}
         onChange={(e) => {
           const value = e.target.value.replace(/[^0-9-]/g, '');
           setPhone(value);
         }}
+        required
       />
 
       <PositionSelector selectedPositions={positions} onChange={setPositions} />
