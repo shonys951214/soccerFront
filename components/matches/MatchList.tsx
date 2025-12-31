@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { matchesApi } from '@/lib/api/matches.api';
 import { MatchListItem as MatchListItemType } from '@/lib/types/match.types';
 import MatchFilter from './MatchFilter';
@@ -15,34 +15,35 @@ interface MatchListProps {
 
 export default function MatchList({ teamId, canCreate = false }: MatchListProps) {
   const [matches, setMatches] = useState<MatchListItemType[]>([]);
-  const [year, setYear] = useState(new Date().getFullYear());
-  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState<number | null>(new Date().getFullYear());
+  const [month, setMonth] = useState<number | null>(new Date().getMonth() + 1);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const fetchMatches = async (selectedYear: number, selectedMonth: number) => {
+  const fetchMatches = useCallback(async (selectedYear: number | null, selectedMonth: number | null) => {
     setIsLoading(true);
     setError('');
     try {
-      const data = await matchesApi.getMatches(teamId, selectedYear, selectedMonth);
+      const data = await matchesApi.getMatches(teamId, selectedYear || undefined, selectedMonth || undefined);
       setMatches(data);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError('경기 목록을 불러오는데 실패했습니다.');
+      console.error('Failed to fetch matches:', err);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [teamId]);
 
   useEffect(() => {
     if (teamId) {
       fetchMatches(year, month);
     }
-  }, [teamId, year, month]);
+  }, [teamId, year, month, fetchMatches]);
 
-  const handleFilterChange = (selectedYear: number, selectedMonth: number) => {
+  const handleFilterChange = useCallback((selectedYear: number | null, selectedMonth: number | null) => {
     setYear(selectedYear);
     setMonth(selectedMonth);
-  };
+  }, []);
 
   const handleCreateSuccess = () => {
     fetchMatches(year, month);

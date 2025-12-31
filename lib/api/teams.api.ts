@@ -83,5 +83,17 @@ export const teamsApi = {
     const response = await apiClient.get<TeamDetail>(`/teams/${teamId}`);
     return response.data;
   },
+
+  // 팀 로고 업로드
+  uploadTeamLogo: async (teamId: string, file: File): Promise<{ logoUrl: string }> => {
+    const formData = new FormData();
+    formData.append('logo', file);
+    const response = await apiClient.post<{ logoUrl: string }>(`/teams/${teamId}/logo`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
 };
 

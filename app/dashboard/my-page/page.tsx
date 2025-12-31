@@ -101,8 +101,17 @@ export default function MyPagePage() {
 							)}
 						</div>
 						<label className="cursor-pointer">
-							<input type="file" accept="image/*" onChange={handleImageChange} disabled={isUploading} className="hidden" />
-							<Button variant="outline" size="sm" disabled={isUploading} className="text-xs sm:text-sm">
+							<input type="file" accept="image/*" onChange={handleImageChange} disabled={isUploading} className="hidden" id="profile-image-input" />
+							<Button
+								variant="outline"
+								size="sm"
+								disabled={isUploading}
+								className="text-xs sm:text-sm"
+								onClick={(e) => {
+									e.preventDefault();
+									document.getElementById("profile-image-input")?.click();
+								}}
+							>
 								{isUploading ? "업로드 중..." : "사진 변경"}
 							</Button>
 						</label>
