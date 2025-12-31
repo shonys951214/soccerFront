@@ -1,25 +1,35 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTeamId } from '@/lib/hooks/useTeamId';
 import { teamsApi } from '@/lib/api/teams.api';
-import { TeamDetail } from '@/lib/types/team.types';
+import { TeamDetail, UserTeam } from '@/lib/types/team.types';
 import Loading from '@/components/common/Loading';
+import Button from '@/components/common/Button';
 
 export default function MyTeamPage() {
+  const router = useRouter();
   const { teamId, isLoading: teamIdLoading } = useTeamId();
   const [team, setTeam] = useState<TeamDetail | null>(null);
+  const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const fetchTeam = async () => {
+    const fetchData = async () => {
       if (!teamId) return;
 
       setIsLoading(true);
       try {
-        const teamData = await teamsApi.getTeam(teamId);
+        const [teamData, userTeamData] = await Promise.all([
+          teamsApi.getTeam(teamId),
+          teamsApi.getMyTeam(),
+        ]);
         setTeam(teamData);
+        setUserTeam(userTeamData);
       } catch (err: any) {
         setError('팀 정보를 불러오는데 실패했습니다.');
         console.error('Failed to fetch team:', err);
@@ -29,9 +39,39 @@ export default function MyTeamPage() {
     };
 
     if (teamId) {
-      fetchTeam();
+      fetchData();
     }
   }, [teamId]);
+
+  const handleLeaveTeam = async () => {
+    if (!teamId || !confirm('정말로 팀을 탈퇴하시겠습니까?')) return;
+    
+    setIsLeaving(true);
+    try {
+      await teamsApi.leaveTeam(teamId);
+      localStorage.removeItem('teamId');
+      router.push('/team-select');
+    } catch (err: any) {
+      alert(err.response?.data?.message || '팀 탈퇴에 실패했습니다.');
+    } finally {
+      setIsLeaving(false);
+    }
+  };
+
+  const handleDeleteTeam = async () => {
+    if (!teamId || !confirm('정말로 팀을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+    
+    setIsDeleting(true);
+    try {
+      await teamsApi.deleteTeam(teamId);
+      localStorage.removeItem('teamId');
+      router.push('/team-select');
+    } catch (err: any) {
+      alert(err.response?.data?.message || '팀 삭제에 실패했습니다.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   if (teamIdLoading || isLoading) {
     return (
@@ -140,6 +180,33 @@ export default function MyTeamPage() {
             <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀 시작일</h3>
             <p className="text-base sm:text-lg text-gray-900">{formatCreatedDate(team.createdAt)}</p>
           </div>
+
+          {/* 팀 관리 버튼 */}
+          {userTeam && (
+            <div className="pt-4 border-t border-gray-200">
+              {userTeam.role === 'captain' ? (
+                <Button
+                  variant="danger"
+                  size="md"
+                  className="w-full"
+                  onClick={handleDeleteTeam}
+                  isLoading={isDeleting}
+                >
+                  팀 삭제
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="w-full text-red-600 border-red-300 hover:bg-red-50"
+                  onClick={handleLeaveTeam}
+                  isLoading={isLeaving}
+                >
+                  팀 탈퇴
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

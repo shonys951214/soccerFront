@@ -13,7 +13,7 @@ import Loading from '@/components/common/Loading';
 
 export default function MyPagePage() {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { teamId } = useTeamId();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
@@ -40,10 +40,6 @@ export default function MyPagePage() {
     }
   }, [teamId]);
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/login');
-  };
 
   if (isLoading) {
     return <Loading size="lg" className="py-12" />;
@@ -144,19 +140,6 @@ export default function MyPagePage() {
             비밀번호 변경
           </Button>
         </div>
-      </div>
-
-      {/* 기타 */}
-      <div className="bg-white rounded-lg shadow p-4 sm:p-6 space-y-4">
-        <h2 className="text-base sm:text-lg font-semibold text-gray-800">기타</h2>
-        <Button
-          variant="outline"
-          size="md"
-          className="w-full"
-          onClick={handleLogout}
-        >
-          로그아웃
-        </Button>
       </div>
     </div>
   );
