@@ -38,7 +38,7 @@ export default function MatchDetailPage() {
             <p className="text-gray-600 mb-4">팀에 가입되어 있지 않습니다.</p>
             <a
               href="/team-select"
-              className="text-blue-600 hover:text-blue-700 underline"
+              className="text-red-600 hover:text-red-700 underline"
             >
               클럽 생성 또는 가입하기
             </a>
@@ -53,7 +53,7 @@ export default function MatchDetailPage() {
       <div className="mb-6">
         <a
           href="/dashboard/matches"
-          className="text-blue-600 hover:text-blue-700 text-sm"
+          className="text-red-600 hover:text-red-700 text-sm"
         >
           ← 경기 목록으로
         </a>

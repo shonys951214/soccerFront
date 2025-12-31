@@ -27,7 +27,7 @@ export default function PlayerRecordInput({
             onChange={(e) =>
               onChange({ ...record, played: e.target.checked })
             }
-            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-red-600 rounded focus:ring-red-500"
           />
           <span className="font-medium text-gray-900">{player.name}</span>
         </label>

@@ -59,7 +59,7 @@ export default function LoginForm() {
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
           />
           <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
             로그인 상태 유지
@@ -67,7 +67,7 @@ export default function LoginForm() {
         </div>
 
         <div className="text-sm">
-          <a href="/find-password" className="font-medium text-blue-600 hover:text-blue-500">
+          <a href="/find-password" className="font-medium text-red-600 hover:text-red-500">
             아이디·비밀번호 찾기
           </a>
         </div>
@@ -88,7 +88,7 @@ export default function LoginForm() {
       </Button>
 
       <div className="text-center">
-        <a href="/signup" className="text-sm text-blue-600 hover:text-blue-500">
+        <a href="/signup" className="text-sm text-red-600 hover:text-red-500">
           회원가입
         </a>
       </div>

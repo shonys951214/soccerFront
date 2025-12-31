@@ -6,7 +6,6 @@ import { useAuth } from '@/components/providers/AuthProvider';
 import ProfileRegistrationModal from '@/components/auth/ProfileRegistrationModal';
 import Header from '@/components/layout/Header';
 import TabNavigation from '@/components/layout/TabNavigation';
-import MyPage from '@/components/dashboard/MyPage';
 import { usersApi } from '@/lib/api/users.api';
 import { useTeamId } from '@/lib/hooks/useTeamId';
 
@@ -52,7 +51,7 @@ export default function DashboardLayout({
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">로딩 중...</p>
         </div>
       </div>
@@ -64,14 +63,7 @@ export default function DashboardLayout({
       <Header />
       <TabNavigation />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row justify-between gap-8">
-          <div className="flex-1 min-w-0">{children}</div>
-          {teamId && (
-            <div className="w-full lg:w-80 flex-shrink-0">
-              <MyPage teamId={teamId} />
-            </div>
-          )}
-        </div>
+        {children}
       </main>
       <ProfileRegistrationModal
         isOpen={showProfileModal}

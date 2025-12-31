@@ -96,7 +96,7 @@ export default function SignupForm() {
       </Button>
 
       <div className="text-center">
-        <a href="/login" className="text-sm text-blue-600 hover:text-blue-500">
+        <a href="/login" className="text-sm text-red-600 hover:text-red-500">
           이미 계정이 있으신가요? 로그인
         </a>
       </div>

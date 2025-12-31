@@ -81,7 +81,7 @@ export default function AddMemberModal({
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value as any)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           >
             <option value="active">활동</option>
             <option value="injured">부상</option>

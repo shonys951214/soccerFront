@@ -52,7 +52,7 @@ export default function JoinTeamList({ onJoin, isLoading = false }: JoinTeamList
       {teams.map((team) => (
         <div
           key={team.id}
-          className="p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-500 transition-colors"
+          className="p-4 bg-white rounded-lg border border-gray-200 hover:border-red-500 transition-colors"
         >
           <div className="flex items-center justify-between">
             <div>

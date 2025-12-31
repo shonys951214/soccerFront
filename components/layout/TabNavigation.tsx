@@ -8,6 +8,7 @@ const tabs = [
   { name: '경기', href: '/dashboard/matches', icon: '⚽' },
   { name: '개인', href: '/dashboard/rankings', icon: '🏆' },
   { name: '팀 구성', href: '/dashboard/team', icon: '👥' },
+  { name: '마이페이지', href: '/dashboard/my-page', icon: '👤' },
 ];
 
 export default function TabNavigation() {
@@ -32,7 +33,7 @@ export default function TabNavigation() {
                   flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors
                   ${
                     isActive
-                      ? 'border-blue-500 text-blue-600'
+                      ? 'border-red-600 text-red-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }
                 `}
