@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Team, CreateTeamRequest, TeamStats, TeamMember } from '@/lib/types/team.types';
+import { Team, CreateTeamRequest, TeamStats, TeamMember, UserTeam } from '@/lib/types/team.types';
 
 export const teamsApi = {
   // 클럽 생성
@@ -11,6 +11,12 @@ export const teamsApi = {
   // 공개 팀 목록 조회
   getPublicTeams: async (): Promise<Team[]> => {
     const response = await apiClient.get<Team[]>('/teams/public');
+    return response.data;
+  },
+
+  // 현재 사용자의 팀 조회
+  getMyTeam: async (): Promise<UserTeam | null> => {
+    const response = await apiClient.get<UserTeam | null>('/teams/my-team');
     return response.data;
   },
 

@@ -48,6 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    // 이전 사용자의 데이터 정리
+    localStorage.removeItem('teamId');
     const response = await authApi.login({ email, password });
     setUser(response.user);
     // 프로필 정보도 새로고침
@@ -55,6 +57,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signup = async (email: string, password: string, name: string) => {
+    // 이전 사용자의 데이터 정리
+    localStorage.removeItem('teamId');
     const response = await authApi.signup({ email, password, name });
     setUser(response.user);
     // 프로필 정보도 새로고침
@@ -64,6 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     await authApi.logout();
     setUser(null);
+    // localStorage 정리
+    localStorage.removeItem('token');
+    localStorage.removeItem('teamId');
   };
 
   return (

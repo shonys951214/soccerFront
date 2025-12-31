@@ -30,3 +30,10 @@ export interface TeamStats {
   averageAttendance: number;
 }
 
+export interface UserTeam {
+  teamId: string;
+  teamName: string;
+  role: 'captain' | 'vice_captain' | 'member';
+  status: 'active' | 'injured' | 'long_term_absence' | 'short_term_absence';
+}
+

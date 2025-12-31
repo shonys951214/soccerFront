@@ -13,7 +13,9 @@ export default function MatchRecordPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // localStorage에서 팀 ID 가져오기
+    // 실제 팀 멤버십 확인은 useTeamId 훅을 사용하지만,
+    // 여기서는 matchId가 있으므로 일단 localStorage에서 가져옴
+    // TODO: useTeamId 훅으로 변경 고려
     const teamId = localStorage.getItem('teamId');
     setTeamId(teamId);
     setIsLoading(false);

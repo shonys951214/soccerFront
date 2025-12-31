@@ -18,7 +18,7 @@ export default function TeamSelectPage() {
 		setIsLoading(true);
 		try {
 			const team = await teamsApi.createTeam({ name });
-			// 팀 ID를 localStorage에 저장
+			// 팀 생성 후 팀 ID를 localStorage에 저장 (캐싱)
 			localStorage.setItem("teamId", team.id);
 			router.push("/dashboard");
 		} catch (error) {
@@ -32,7 +32,7 @@ export default function TeamSelectPage() {
 		setIsLoading(true);
 		try {
 			await teamsApi.joinTeam(teamId);
-			// 팀 ID를 localStorage에 저장
+			// 팀 가입 후 팀 ID를 localStorage에 저장 (캐싱)
 			localStorage.setItem("teamId", teamId);
 			router.push("/dashboard");
 		} catch (error) {

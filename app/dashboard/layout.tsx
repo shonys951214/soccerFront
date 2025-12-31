@@ -35,6 +35,9 @@ export default function DashboardLayout({
         }
       } else if (!authLoading && !isAuthenticated) {
         // 인증되지 않았으면 로그인 페이지로
+        // localStorage도 정리
+        localStorage.removeItem('token');
+        localStorage.removeItem('teamId');
         router.push('/login');
       }
     };

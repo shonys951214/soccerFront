@@ -1,20 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import SummaryTab from '@/components/dashboard/SummaryTab';
-import { teamsApi } from '@/lib/api/teams.api';
+import { useTeamId } from '@/lib/hooks/useTeamId';
 import Loading from '@/components/common/Loading';
 
 export default function DashboardPage() {
-  const [teamId, setTeamId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // localStorage에서 팀 ID 가져오기
-    const teamId = localStorage.getItem('teamId');
-    setTeamId(teamId);
-    setIsLoading(false);
-  }, []);
+  const { teamId, isLoading } = useTeamId();
 
   if (isLoading) {
     return (
