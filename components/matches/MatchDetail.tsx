@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { matchesApi } from '@/lib/api/matches.api';
+import { teamsApi } from '@/lib/api/teams.api';
 import { MatchDetail as MatchDetailType, Game } from '@/lib/types/match.types';
+import { UserTeam } from '@/lib/types/team.types';
 import GameExpandable from './GameExpandable';
 import AttendanceVote from './AttendanceVote';
 import AttendanceStatus from './AttendanceStatus';
@@ -29,17 +31,20 @@ export default function MatchDetail({
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
 
   const fetchMatch = async () => {
     setIsLoading(true);
     setError('');
     try {
-      const [matchData, gamesData] = await Promise.all([
+      const [matchData, gamesData, userTeamData] = await Promise.all([
         matchesApi.getMatch(matchId),
         matchesApi.getMatchGames(matchId).catch(() => []), // 게임 데이터가 없을 수 있음
+        teamsApi.getMyTeam().catch(() => null), // 팀 정보가 없을 수 있음
       ]);
       setMatch(matchData);
       setGames(gamesData);
+      setUserTeam(userTeamData);
     } catch (err: any) {
       setError('경기 정보를 불러오는데 실패했습니다.');
     } finally {
@@ -116,11 +121,14 @@ export default function MatchDetail({
           <h2 className="text-lg sm:text-xl font-bold text-gray-900">경기 정보</h2>
           {canEdit && (
             <div className="flex flex-wrap gap-2">
-              <Link href={`/dashboard/matches/${matchId}/record`}>
-                <Button variant="primary" size="sm">
-                  기록 입력
-                </Button>
-              </Link>
+              {/* 기록 입력 버튼은 팀장/부팀장만 볼 수 있음 */}
+              {userTeam && (userTeam.role === 'captain' || userTeam.role === 'vice_captain') && (
+                <Link href={`/dashboard/matches/${matchId}/record`}>
+                  <Button variant="primary" size="sm">
+                    기록 입력
+                  </Button>
+                </Link>
+              )}
               <Link href={`/dashboard/matches/${matchId}/edit`}>
                 <Button variant="outline" size="sm">
                   수정

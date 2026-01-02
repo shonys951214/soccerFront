@@ -162,6 +162,7 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
           isOpen={isAddMemberModalOpen}
           onClose={() => setIsAddMemberModalOpen(false)}
           teamId={teamId}
+          existingMembers={members}
           onSuccess={async () => {
             // 목록 새로고침
             const membersData = await teamsApi.getTeamMembers(teamId);

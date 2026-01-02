@@ -139,6 +139,19 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
         await fetchMembers(); // 원래 값으로 복원
         return;
       }
+
+      // 등번호 중복 체크
+      if (numValue !== undefined) {
+        const duplicateMember = members.find(
+          (m) => m.id !== memberId && m.jerseyNumber === numValue
+        );
+        if (duplicateMember) {
+          alert(`등번호 ${numValue}는 이미 ${duplicateMember.userName || duplicateMember.name || '다른 팀원'}이 사용 중입니다.`);
+          await fetchMembers(); // 원래 값으로 복원
+          return;
+        }
+      }
+
       await teamsApi.updateMember(teamId, memberId, { jerseyNumber: numValue });
       await fetchMembers();
       setJerseyNumbers(prev => {

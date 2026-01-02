@@ -7,11 +7,14 @@ import Button from '@/components/common/Button';
 import { teamsApi } from '@/lib/api/teams.api';
 import { usersApi } from '@/lib/api/users.api';
 
+import { TeamMember } from '@/lib/types/team.types';
+
 interface AddMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
   teamId: string;
   onSuccess: () => void;
+  existingMembers?: TeamMember[]; // 기존 팀원 목록 (등번호 중복 체크용)
 }
 
 export default function AddMemberModal({
@@ -19,6 +22,7 @@ export default function AddMemberModal({
   onClose,
   teamId,
   onSuccess,
+  existingMembers = [],
 }: AddMemberModalProps) {
   const [userId, setUserId] = useState('');
   const [jerseyNumber, setJerseyNumber] = useState('');
@@ -33,6 +37,20 @@ export default function AddMemberModal({
     if (!userId.trim()) {
       setError('사용자 ID를 입력해주세요.');
       return;
+    }
+
+    // 등번호 중복 체크
+    if (jerseyNumber) {
+      const numValue = parseInt(jerseyNumber);
+      if (!isNaN(numValue) && numValue >= 0) {
+        const duplicateMember = existingMembers.find(
+          (m) => m.jerseyNumber === numValue
+        );
+        if (duplicateMember) {
+          setError(`등번호 ${numValue}는 이미 ${duplicateMember.userName || duplicateMember.name || '다른 팀원'}이 사용 중입니다.`);
+          return;
+        }
+      }
     }
 
     setIsLoading(true);
