@@ -28,56 +28,12 @@ export default function MatchRecordForm({
   const [error, setError] = useState('');
   const [isInitialized, setIsInitialized] = useState(false);
 
+  // 멤버 정보 가져오기 (한 번만 실행)
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const data = await teamsApi.getTeamMembers(teamId);
         setMembers(data);
-        
-        // 초기화는 한 번만 수행
-        if (!isInitialized) {
-          const initialPlayerRecords: PlayerRecord[] = data.map((member) => ({
-            userId: member.userId,
-            userName: member.userName || member.name || '',
-            played: false,
-            goals: 0,
-            assists: 0,
-          }));
-          setGames([
-            {
-              gameNumber: 1,
-              ourScore: 0,
-              opponentScore: 0,
-              playerRecords: initialPlayerRecords,
-            },
-          ]);
-          setIsInitialized(true);
-        } else {
-          // 이미 초기화된 경우, 새로운 멤버만 추가
-          const updatedGames = games.map((game) => {
-            const existingUserIds = new Set(game.playerRecords.map((pr) => pr.userId));
-            const newPlayerRecords = data
-              .filter((member) => !existingUserIds.has(member.userId))
-              .map((member) => ({
-                userId: member.userId,
-                userName: member.userName || member.name || '',
-                played: false,
-                goals: 0,
-                assists: 0,
-              }));
-            return {
-              ...game,
-              playerRecords: [...game.playerRecords, ...newPlayerRecords],
-            };
-          });
-          // 실제로 새로운 멤버가 추가된 경우에만 업데이트
-          const hasNewMembers = updatedGames.some((g, idx) => 
-            g.playerRecords.length !== games[idx]?.playerRecords.length
-          );
-          if (hasNewMembers) {
-            setGames(updatedGames);
-          }
-        }
       } catch (err: unknown) {
         setError('팀원 정보를 불러오는데 실패했습니다.');
       } finally {
@@ -86,8 +42,29 @@ export default function MatchRecordForm({
     };
 
     fetchMembers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamId]); // games와 isInitialized는 의존성에서 제외하여 초기화 방지
+  }, [teamId]);
+
+  // games 초기화 (한 번만 실행)
+  useEffect(() => {
+    if (!isInitialized && members.length > 0 && games.length === 0) {
+      const initialPlayerRecords: PlayerRecord[] = members.map((member) => ({
+        userId: member.userId,
+        userName: member.userName || member.name || '',
+        played: false,
+        goals: 0,
+        assists: 0,
+      }));
+      setGames([
+        {
+          gameNumber: 1,
+          ourScore: 0,
+          opponentScore: 0,
+          playerRecords: initialPlayerRecords,
+        },
+      ]);
+      setIsInitialized(true);
+    }
+  }, [members, isInitialized, games.length]);
 
   const handleAddGame = () => {
     const newGameNumber = games.length + 1;
@@ -151,10 +128,25 @@ export default function MatchRecordForm({
 
     try {
       const request: RecordMatchRequest = {
-        games: games.map((g) => ({
-          ...g,
-          playerRecords: g.playerRecords.filter((pr) => pr.played),
-        })),
+        games: games.map((g) => {
+          // result 계산
+          let result: 'win' | 'draw' | 'loss';
+          if (g.ourScore > g.opponentScore) {
+            result = 'win';
+          } else if (g.ourScore < g.opponentScore) {
+            result = 'loss';
+          } else {
+            result = 'draw';
+          }
+
+          return {
+            gameNumber: g.gameNumber,
+            ourScore: g.ourScore,
+            opponentScore: g.opponentScore,
+            result,
+            playerRecords: g.playerRecords.filter((pr) => pr.played),
+          };
+        }),
         notes: notes.trim() || undefined,
       };
       await matchesApi.recordMatch(matchId, request);

@@ -86,6 +86,38 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
     };
   }, [fetchData, pathname]);
 
+  // 투표 완료 이벤트 리스너 (즉시 새로고침)
+  useEffect(() => {
+    const handleAttendanceVoted = () => {
+      if (pathname === '/dashboard') {
+        // 즉시 새로고침
+        fetchData();
+      }
+    };
+
+    window.addEventListener('attendanceVoted', handleAttendanceVoted);
+    return () => {
+      window.removeEventListener('attendanceVoted', handleAttendanceVoted);
+    };
+  }, [fetchData, pathname]);
+
+  // 주기적으로 투표 플래그 확인 (대시보드에 머무를 때)
+  useEffect(() => {
+    if (pathname !== '/dashboard') return;
+
+    const checkAttendanceVoted = () => {
+      const attendanceVoted = localStorage.getItem('attendanceVoted');
+      if (attendanceVoted) {
+        localStorage.removeItem('attendanceVoted');
+        fetchData();
+      }
+    };
+
+    // 1초마다 체크
+    const interval = setInterval(checkAttendanceVoted, 1000);
+    return () => clearInterval(interval);
+  }, [pathname, fetchData]);
+
   if (isLoading) {
     return <Loading size="lg" className="py-12" />;
   }

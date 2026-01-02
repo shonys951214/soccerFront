@@ -81,6 +81,7 @@ export interface GameRecord {
   gameNumber: number;
   ourScore: number;
   opponentScore: number;
+  result?: 'win' | 'draw' | 'loss'; // 백엔드에서 필요하지만 프론트엔드에서 계산
   playerRecords: PlayerRecord[];
 }
 

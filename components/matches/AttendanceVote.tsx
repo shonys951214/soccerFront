@@ -28,6 +28,8 @@ export default function AttendanceVote({
       setSelectedStatus(status);
       // 투표 완료 플래그 설정 (요약탭 새로고침용)
       localStorage.setItem('attendanceVoted', Date.now().toString());
+      // Custom Event 발생 (요약탭에서 즉시 감지)
+      window.dispatchEvent(new CustomEvent('attendanceVoted', { detail: { matchId, status } }));
       onVoteSuccess?.();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || '투표에 실패했습니다.';
