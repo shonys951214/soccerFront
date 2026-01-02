@@ -16,9 +16,9 @@ export default function Top10List({
   winRate = [],
 }: Top10ListProps) {
   return (
-    <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+    <div className="bg-white rounded-lg shadow p-4 sm:p-6 h-full">
       <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Top10</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 sm:gap-4">
         <Top10Section title="출전 수" players={appearances} />
         <Top10Section title="득점" players={goals} />
         <Top10Section title="도움" players={assists} />

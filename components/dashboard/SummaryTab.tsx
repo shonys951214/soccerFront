@@ -49,7 +49,8 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      {/* 상단: 다음경기, 팀구성, Top10 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <NextMatchCard match={data.nextMatch} />
         <div className="bg-white rounded-lg shadow p-4 sm:p-6">
           <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">팀 구성</h2>
@@ -77,6 +78,16 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
             </div>
           </div>
         </div>
+        {data.top10 && (
+          <div className="md:col-span-2 lg:col-span-1">
+            <Top10List
+              appearances={data.top10.appearances}
+              goals={data.top10.goals}
+              assists={data.top10.assists}
+              winRate={data.top10.winRate}
+            />
+          </div>
+        )}
       </div>
 
       {data.teamStats && (
@@ -84,15 +95,6 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
           matchStats={data.teamStats.matchStats}
           gameStats={data.teamStats.gameStats}
           totalGoals={data.teamStats.totalGoals}
-        />
-      )}
-
-      {data.top10 && (
-        <Top10List
-          appearances={data.top10.appearances}
-          goals={data.top10.goals}
-          assists={data.top10.assists}
-          winRate={data.top10.winRate}
         />
       )}
 

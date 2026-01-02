@@ -1,77 +1,37 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { matchesApi } from '@/lib/api/matches.api';
-import { useTeamId } from '@/lib/hooks/useTeamId';
-import { MatchDetail, UpdateMatchRequest } from '@/lib/types/match.types';
+import { useMatchForm } from '@/lib/hooks/useMatchForm';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
+import PageLayout from '@/components/common/PageLayout';
 
 export default function EditMatchPage() {
   const router = useRouter();
   const params = useParams();
   const matchId = params.id as string;
-  const { teamId, isLoading: isTeamLoading } = useTeamId();
   
-  const [match, setMatch] = useState<MatchDetail | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState('');
+  const {
+    match,
+    formData,
+    setFormData,
+    isLoading,
+    isSaving,
+    error,
+    handleSubmit,
+  } = useMatchForm(matchId);
 
-  const [formData, setFormData] = useState<UpdateMatchRequest>({
-    date: '',
-    time: '',
-    location: '',
-    opponentTeamName: '',
-  });
-
-  useEffect(() => {
-    if (matchId && !isTeamLoading) {
-      fetchMatch();
-    }
-  }, [matchId, isTeamLoading]);
-
-  const fetchMatch = async () => {
-    setIsLoading(true);
-    try {
-      const data = await matchesApi.getMatch(matchId);
-      setMatch(data);
-      setFormData({
-        date: data.date.split('T')[0], // YYYY-MM-DD 형식으로 변환
-        time: data.time || '',
-        location: data.location || '',
-        opponentTeamName: data.opponentTeamName,
-      });
-    } catch (err: any) {
-      setError('경기 정보를 불러오는데 실패했습니다.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsSaving(true);
-
-    try {
-      await matchesApi.updateMatch(matchId, formData);
-      router.push(`/dashboard/matches/${matchId}`);
-    } catch (err: any) {
-      setError(err.response?.data?.message || '경기 수정에 실패했습니다.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  if (isTeamLoading || isLoading) {
-    return <Loading size="lg" className="py-12" />;
+  if (isLoading) {
+    return <PageLayout isLoading={true} />;
   }
 
   if (!match) {
-    return <div className="text-gray-500 text-center py-8">경기 정보가 없습니다.</div>;
+    return (
+      <PageLayout>
+        <div className="text-gray-500 text-center py-8">경기 정보가 없습니다.</div>
+      </PageLayout>
+    );
   }
 
   return (

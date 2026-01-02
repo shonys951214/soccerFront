@@ -1,55 +1,20 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { usersApi } from '@/lib/api/users.api';
+import { usePasswordChange } from '@/lib/hooks/usePasswordChange';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
-  const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const [formData, setFormData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setSuccess(false);
-
-    // 비밀번호 확인 검증
-    if (formData.newPassword !== formData.confirmPassword) {
-      setError('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
-      return;
-    }
-
-    // 비밀번호 길이 검증
-    if (formData.newPassword.length < 6) {
-      setError('새 비밀번호는 최소 6자 이상이어야 합니다.');
-      return;
-    }
-
-    setIsSaving(true);
-
-    try {
-      await usersApi.changePassword(formData.currentPassword, formData.newPassword);
-      setSuccess(true);
-      // 2초 후 대시보드로 이동
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
-    } catch (err: any) {
-      setError(err.response?.data?.message || '비밀번호 변경에 실패했습니다.');
-    } finally {
-      setIsSaving(false);
-    }
-  };
+  const {
+    formData,
+    setFormData,
+    isSaving,
+    error,
+    success,
+    handleSubmit,
+  } = usePasswordChange();
 
   return (
     <div className="max-w-2xl mx-auto space-y-4 sm:space-y-6 px-3 sm:px-0">
