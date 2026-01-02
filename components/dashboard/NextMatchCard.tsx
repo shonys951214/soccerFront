@@ -89,20 +89,18 @@ export default function NextMatchCard({ match }: NextMatchCardProps) {
               {getAttendanceStatusText(match.myAttendanceStatus)}
             </span>
           ) : (
-            <div className="space-y-2">
+            <div className="flex items-center justify-between gap-2">
               <span className="inline-block px-3 py-1 rounded-full text-sm font-medium text-gray-600 bg-gray-50">
                 미투표
               </span>
-              <div>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => router.push(`/dashboard/matches/${match.id}`)}
-                  className="w-full sm:w-auto"
-                >
-                  투표하러가기
-                </Button>
-              </div>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => router.push(`/dashboard/matches/${match.id}`)}
+                className="flex-shrink-0"
+              >
+                투표하러가기
+              </Button>
             </div>
           )}
         </div>

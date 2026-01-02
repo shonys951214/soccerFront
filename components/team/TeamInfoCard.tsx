@@ -24,10 +24,7 @@ export default function TeamInfoCard({
   isDeleting = false,
 }: TeamInfoCardProps) {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-0">
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 sm:mb-8">우리 팀 소개</h1>
-
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {/* 팀 로고/사진 */}
         <div className="relative w-full h-48 sm:h-64 bg-gray-200 flex items-center justify-center">
           {team.logo ? (

@@ -36,12 +36,13 @@ export default function TeamSelectPage() {
 	const handleJoinTeam = async (teamId: string) => {
 		setIsLoading(true);
 		try {
-			await teamsApi.joinTeam(teamId);
-			// 팀 가입 후 팀 ID를 localStorage에 저장 (캐싱)
-			localStorage.setItem("teamId", teamId);
+			await teamsApi.createJoinRequest(teamId);
+			// 가입신청 완료 후 알림
+			alert("가입신청이 완료되었습니다. 팀장의 승인을 기다려주세요.");
 			router.push("/dashboard");
-		} catch (error) {
-			throw error;
+		} catch (error: any) {
+			const errorMessage = error.response?.data?.message || "가입신청에 실패했습니다.";
+			alert(errorMessage);
 		} finally {
 			setIsLoading(false);
 		}
@@ -95,7 +96,7 @@ export default function TeamSelectPage() {
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
 						<TeamSelectCard title="클럽 생성" description="새로운 클럽을 만들어 팀을 시작하세요" icon="⚽" onClick={() => setViewMode("create")} />
-						<TeamSelectCard title="클럽 가입" description="기존 클럽에 가입하여 함께하세요" icon="👥" onClick={() => setViewMode("join")} />
+						<TeamSelectCard title="클럽 가입신청" description="기존 클럽에 가입신청을 보내세요" icon="👥" onClick={() => setViewMode("join")} />
 					</div>
 				</div>
 			</div>
@@ -114,16 +115,16 @@ export default function TeamSelectPage() {
 	}
 
 	return (
-		<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-			<div className="max-w-md w-full bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg">
-				<div className="flex items-center justify-between mb-4 sm:mb-6">
-					<h2 className="text-xl sm:text-2xl font-bold text-gray-900">클럽 가입</h2>
-					<button onClick={() => setViewMode("select")} className="text-gray-500 hover:text-gray-700">
-						← 돌아가기
-					</button>
+			<div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+				<div className="max-w-md w-full bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg">
+					<div className="flex items-center justify-between mb-4 sm:mb-6">
+						<h2 className="text-xl sm:text-2xl font-bold text-gray-900">클럽 가입신청</h2>
+						<button onClick={() => setViewMode("select")} className="text-gray-500 hover:text-gray-700">
+							← 돌아가기
+						</button>
+					</div>
+					<JoinTeamList onJoin={handleJoinTeam} isLoading={isLoading} />
 				</div>
-				<JoinTeamList onJoin={handleJoinTeam} isLoading={isLoading} />
 			</div>
-		</div>
 	);
 }

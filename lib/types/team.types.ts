@@ -57,3 +57,17 @@ export interface TeamDetail {
   createdAt: string;
 }
 
+export interface JoinRequest {
+  id: string;
+  userId: string;
+  userName: string;
+  message?: string;
+  status: 'pending' | 'approved' | 'rejected';
+  positions?: Position[];
+  phone?: string;
+  birthdate?: string;
+  summary?: string;
+  createdAt: string;
+  reviewedAt?: string;
+}
+

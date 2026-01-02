@@ -68,7 +68,7 @@ export default function JoinTeamList({ onJoin, isLoading = false }: JoinTeamList
               isLoading={isLoading}
               className="w-full sm:w-auto mt-2 sm:mt-0"
             >
-              가입하기
+              가입신청
             </Button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import apiClient from './client';
-import { Team, CreateTeamRequest, TeamStats, TeamMember, UserTeam, TeamDetail } from '@/lib/types/team.types';
+import { Team, CreateTeamRequest, TeamStats, TeamMember, UserTeam, TeamDetail, JoinRequest } from '@/lib/types/team.types';
 
 export const teamsApi = {
   // 클럽 생성
@@ -20,9 +20,20 @@ export const teamsApi = {
     return response.data;
   },
 
-  // 클럽 가입
-  joinTeam: async (teamId: string): Promise<void> => {
-    await apiClient.post(`/teams/${teamId}/join`);
+  // 클럽 가입신청
+  createJoinRequest: async (teamId: string, message?: string): Promise<void> => {
+    await apiClient.post(`/teams/${teamId}/join`, { message });
+  },
+
+  // 가입신청 목록 조회 (팀장/부팀장만)
+  getJoinRequests: async (teamId: string): Promise<JoinRequest[]> => {
+    const response = await apiClient.get<JoinRequest[]>(`/teams/${teamId}/join-requests`);
+    return response.data;
+  },
+
+  // 가입신청 승인/거절
+  reviewJoinRequest: async (teamId: string, requestId: string, status: 'approved' | 'rejected'): Promise<void> => {
+    await apiClient.put(`/teams/${teamId}/join-requests/${requestId}`, { status });
   },
 
   // 팀 구성 통계
