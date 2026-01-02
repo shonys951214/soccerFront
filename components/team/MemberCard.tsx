@@ -51,6 +51,19 @@ export default function MemberCard({
     return positions.join(', ');
   };
 
+  const getRoleLabel = (role: string) => {
+    switch (role) {
+      case 'captain':
+        return '팀장';
+      case 'vice_captain':
+        return '부팀장';
+      case 'member':
+        return '팀원';
+      default:
+        return role;
+    }
+  };
+
   return (
     <div
       className="bg-white rounded-lg shadow p-4 hover:shadow-lg transition-shadow cursor-pointer relative flex flex-col"
@@ -70,27 +83,36 @@ export default function MemberCard({
       )}
       
       <div className="flex-1">
-        {/* 이름과 등번호 */}
-        <div className="flex items-center gap-2 mb-3">
-          {member.jerseyNumber && (
-            <span className="text-lg font-bold text-gray-600">#{member.jerseyNumber}</span>
-          )}
-          <h3 className="text-lg font-semibold text-gray-900 truncate flex-1">
-            {member.name || member.userName || '이름 없음'}
-          </h3>
+        {/* 상단: 프로필 사진 + 이름/직책 */}
+        <div className="flex items-start gap-3 mb-3">
+          {/* 프로필 사진 (좌측) */}
+          <div className="flex-shrink-0">
+            <img
+              src={member.profileImage || '/profile_default_image.png'}
+              alt={member.name || member.userName || '프로필'}
+              className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+            />
+          </div>
+
+          {/* 이름과 직책 (우측, 세로 배치) */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              {member.jerseyNumber && (
+                <span className="text-sm font-bold text-gray-600">#{member.jerseyNumber}</span>
+              )}
+              <h3 className="text-base font-semibold text-gray-900 truncate">
+                {member.name || member.userName || '이름 없음'}
+              </h3>
+            </div>
+            <p className="text-sm text-gray-600">{getRoleLabel(member.role)}</p>
+          </div>
         </div>
 
-        {/* 역할 배지 */}
-        {member.role && (
-          <div className="mb-2">
-            <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700">
-              {member.role === 'captain' ? '팀장' : member.role === 'vice_captain' ? '부팀장' : '팀원'}
-            </span>
-          </div>
-        )}
-
-        {/* 상태 배지 */}
-        <div className="mb-3">
+        {/* 직책과 상태를 가로로 한 줄에 배치 */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700">
+            {getRoleLabel(member.role)}
+          </span>
           <span
             className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
               member.status
@@ -105,14 +127,6 @@ export default function MemberCard({
           <div className="mb-2">
             <p className="text-xs text-gray-500 mb-1">포지션</p>
             <p className="text-sm font-medium text-gray-900">{getPositionText(member.positions)}</p>
-          </div>
-        )}
-
-        {/* 나이 */}
-        {member.age && (
-          <div className="mb-2">
-            <p className="text-xs text-gray-500 mb-1">나이</p>
-            <p className="text-sm font-medium text-gray-900">{member.age}세</p>
           </div>
         )}
 

@@ -26,7 +26,11 @@ export default function TeamStatsHeader({ stats }: TeamStatsHeaderProps) {
         />
         <StatItem
           label="평균 참석률"
-          value={`${(stats.averageAttendance * 100).toFixed(1)}%`}
+          value={
+            stats.averageAttendance !== undefined && !isNaN(stats.averageAttendance)
+              ? `${(stats.averageAttendance * 100).toFixed(1)}%`
+              : '0.0%'
+          }
         />
       </div>
     </div>

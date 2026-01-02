@@ -21,6 +21,7 @@ export interface TeamMember {
   userId: string;
   name?: string; // 사용자 이름
   userName?: string; // 사용자 이름 (하위 호환성)
+  profileImage?: string; // 프로필 이미지
   jerseyNumber?: number;
   role: 'captain' | 'vice_captain' | 'member';
   status: 'active' | 'injured' | 'long_term_absence' | 'short_term_absence';

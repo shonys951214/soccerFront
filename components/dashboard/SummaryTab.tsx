@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { DashboardSummary } from '@/lib/types/dashboard.types';
 import { dashboardApi } from '@/lib/api/dashboard.api';
 import NextMatchCard from './NextMatchCard';
@@ -14,26 +15,50 @@ interface SummaryTabProps {
 }
 
 export default function SummaryTab({ teamId }: SummaryTabProps) {
+  const pathname = usePathname();
   const [data, setData] = useState<DashboardSummary | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const fetchData = useCallback(async () => {
+    if (!teamId) return;
+    
+    setIsLoading(true);
+    setError('');
+    try {
+      const summary = await dashboardApi.getSummary(teamId);
+      setData(summary);
+    } catch (err: any) {
+      setError('데이터를 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [teamId]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const summary = await dashboardApi.getSummary(teamId);
-        setData(summary);
-      } catch (err: any) {
-        setError('데이터를 불러오는데 실패했습니다.');
-      } finally {
-        setIsLoading(false);
+    fetchData();
+  }, [fetchData]);
+
+  // 경로가 변경되어 대시보드로 돌아왔을 때 데이터 새로고침 (투표 후 돌아왔을 때)
+  useEffect(() => {
+    if (pathname === '/dashboard') {
+      fetchData();
+    }
+  }, [pathname, fetchData]);
+
+  // 페이지가 보일 때 데이터 새로고침 (다른 탭에서 돌아왔을 때)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && pathname === '/dashboard') {
+        fetchData();
       }
     };
 
-    if (teamId) {
-      fetchData();
-    }
-  }, [teamId]);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [fetchData, pathname]);
 
   if (isLoading) {
     return <Loading size="lg" className="py-12" />;

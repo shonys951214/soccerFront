@@ -33,9 +33,6 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // 현재 사용자가 팀장인지 확인
-  const isCaptain = userTeam?.role === 'captain';
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,19 +81,6 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
 
   const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);
-  };
-
-  const handleDelete = async (memberId: string) => {
-    if (!confirm('정말 삭제하시겠습니까?')) return;
-    
-    try {
-      await teamsApi.deleteMember(teamId, memberId);
-      // 목록 새로고침
-      const membersData = await teamsApi.getTeamMembers(teamId);
-      setMembers(membersData);
-    } catch (err: any) {
-      alert(err.response?.data?.message || '팀원 삭제에 실패했습니다.');
-    }
   };
 
   if (isLoading) {
@@ -152,8 +136,6 @@ export default function TeamMembers({ teamId, canManage = false }: TeamMembersPr
               key={member.id}
               member={member}
               onClick={() => handleMemberClick(member)}
-              onDelete={isCaptain ? () => handleDelete(member.id) : undefined}
-              canDelete={isCaptain}
             />
           ))
         )}

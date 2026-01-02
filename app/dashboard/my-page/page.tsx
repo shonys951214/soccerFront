@@ -82,8 +82,8 @@ export default function MyPagePage() {
 			<h1 className="text-xl sm:text-2xl font-bold text-gray-900">마이페이지</h1>
 
 			{/* 프로필 사진 + 팀 정보 */}
-			<div className="bg-white rounded-lg shadow p-3 sm:p-4">
-				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+			<div className="bg-white rounded-lg shadow p-3 sm:p-4 max-w-2xl mx-auto">
+				<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
 					{/* 프로필 사진 */}
 					<div className="flex flex-col items-center space-y-2">
 						<div className="relative">

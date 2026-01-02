@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useProfileForm } from '@/lib/hooks/useProfileForm';
+import { formatPhoneNumber } from '@/lib/utils/validation';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
@@ -54,7 +55,11 @@ export default function EditProfilePage() {
           label="연락처"
           placeholder="010-0000-0000"
           value={formData.phone}
-          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          onChange={(e) => {
+            const formatted = formatPhoneNumber(e.target.value);
+            setFormData({ ...formData, phone: formatted });
+          }}
+          maxLength={13}
         />
 
         <div>
