@@ -133,7 +133,6 @@ export default function TeamInfoCard({
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 }
