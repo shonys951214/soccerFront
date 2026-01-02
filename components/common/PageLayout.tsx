@@ -4,7 +4,7 @@ import Loading from './Loading';
 interface PageLayoutProps {
   isLoading?: boolean;
   error?: string;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 

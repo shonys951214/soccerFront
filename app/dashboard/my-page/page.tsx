@@ -82,15 +82,15 @@ export default function MyPagePage() {
 			<h1 className="text-xl sm:text-2xl font-bold text-gray-900">마이페이지</h1>
 
 			{/* 프로필 사진 + 팀 정보 */}
-			<div className="bg-white rounded-lg shadow p-4 sm:p-6">
-				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+			<div className="bg-white rounded-lg shadow p-3 sm:p-4">
+				<div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
 					{/* 프로필 사진 */}
-					<div className="flex flex-col items-center space-y-3">
+					<div className="flex flex-col items-center space-y-2">
 						<div className="relative">
 							<img
 								src={profile?.profileImage || "/profile_default_image.png"}
 								alt={profile?.name || user?.name || "프로필"}
-								className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+								className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-gray-200"
 							/>
 							{isUploading && (
 								<div className="absolute inset-0 rounded-full bg-black bg-opacity-50 flex items-center justify-center">
@@ -104,7 +104,7 @@ export default function MyPagePage() {
 								variant="outline"
 								size="sm"
 								disabled={isUploading}
-								className="text-xs sm:text-sm"
+								className="text-xs"
 								onClick={(e) => {
 									e.preventDefault();
 									document.getElementById("profile-image-input")?.click();
@@ -117,20 +117,20 @@ export default function MyPagePage() {
 
 					{/* 팀 정보 */}
 					{userTeam && (
-						<div className="flex-1">
-							<h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-4">내 소속팀</h2>
-							<div className="space-y-2">
-								<div className="flex justify-between">
-									<span className="text-gray-600">팀명</span>
-									<span className="font-medium">{userTeam.teamName}</span>
+						<div className="flex-1 w-full sm:w-auto">
+							<h2 className="text-sm sm:text-base font-semibold text-gray-800 mb-2 sm:mb-3">내 소속팀</h2>
+							<div className="space-y-1.5 sm:space-y-2">
+								<div className="flex items-center gap-2 sm:gap-3">
+									<span className="text-xs sm:text-sm text-gray-600 min-w-12 sm:min-w-14">팀명</span>
+									<span className="text-xs sm:text-sm font-medium text-gray-900">{userTeam.teamName}</span>
 								</div>
-								<div className="flex justify-between">
-									<span className="text-gray-600">역할</span>
-									<span className="font-medium">{userTeam.role === "captain" ? "팀장" : userTeam.role === "vice_captain" ? "부팀장" : "팀원"}</span>
+								<div className="flex items-center gap-2 sm:gap-3">
+									<span className="text-xs sm:text-sm text-gray-600 min-w-12 sm:min-w-14">역할</span>
+									<span className="text-xs sm:text-sm font-medium text-gray-900">{userTeam.role === "captain" ? "팀장" : userTeam.role === "vice_captain" ? "부팀장" : "팀원"}</span>
 								</div>
-								<div className="flex justify-between">
-									<span className="text-gray-600">상태</span>
-									<span className="font-medium">
+								<div className="flex items-center gap-2 sm:gap-3">
+									<span className="text-xs sm:text-sm text-gray-600 min-w-12 sm:min-w-14">상태</span>
+									<span className="text-xs sm:text-sm font-medium text-gray-900">
 										{userTeam.status === "active" ? "활동" : userTeam.status === "injured" ? "부상" : userTeam.status === "long_term_absence" ? "장기 출전 불가" : "단기 출전 불가"}
 									</span>
 								</div>

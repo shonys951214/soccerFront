@@ -3,6 +3,7 @@
 import { useAuth } from '@/components/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/common/Button';
+import Link from 'next/link';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -23,23 +24,19 @@ export default function Header() {
           <div className="flex items-center space-x-2 sm:space-x-4">
             {user && (
               <>
-                <div className="flex items-center space-x-2">
+                <Link
+                  href="/dashboard/my-page"
+                  className="flex items-center space-x-2 px-2 sm:px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer group"
+                >
                   <img
                     src={user.profileImage || '/profile_default_image.png'}
                     alt={user.name}
-                    className="w-8 h-8 rounded-full object-cover border border-gray-300"
+                    className="w-8 h-8 rounded-full object-cover border border-gray-300 group-hover:border-gray-400 transition-colors"
                   />
-                  <span className="hidden sm:inline text-sm text-gray-700">{user.name}님</span>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-gray-700 text-xs sm:text-sm"
-                  onClick={() => router.push('/dashboard/my-page')}
-                >
-                  <span className="hidden sm:inline">마이페이지</span>
-                  <span className="sm:hidden">마이</span>
-                </Button>
+                  <span className="hidden sm:inline text-sm text-gray-700 group-hover:text-gray-900 font-medium transition-colors">
+                    {user.name}님
+                  </span>
+                </Link>
               </>
             )}
             <Button 
