@@ -119,6 +119,42 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
     }
   };
 
+  const [jerseyNumbers, setJerseyNumbers] = useState<Record<string, string>>({});
+
+  const handleJerseyNumberChange = (memberId: string, value: string) => {
+    if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+      setJerseyNumbers(prev => ({ ...prev, [memberId]: value }));
+    }
+  };
+
+  const handleJerseyNumberBlur = async (memberId: string) => {
+    const value = jerseyNumbers[memberId];
+    if (value === undefined) return;
+
+    setProcessingId(memberId);
+    try {
+      const numValue = value.trim() === '' ? undefined : parseInt(value);
+      if (numValue !== undefined && (isNaN(numValue) || numValue < 0)) {
+        alert('등번호는 0 이상의 숫자여야 합니다.');
+        await fetchMembers(); // 원래 값으로 복원
+        return;
+      }
+      await teamsApi.updateMember(teamId, memberId, { jerseyNumber: numValue });
+      await fetchMembers();
+      setJerseyNumbers(prev => {
+        const newState = { ...prev };
+        delete newState[memberId];
+        return newState;
+      });
+    } catch (err) {
+      const errorMessage = getErrorMessage(err, '등번호 변경에 실패했습니다.');
+      alert(errorMessage);
+      await fetchMembers(); // 원래 값으로 복원
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   const handleDeleteMember = async (memberId: string, memberName: string) => {
     if (!confirm(`정말 ${memberName}님을 팀에서 추방하시겠습니까?`)) {
       return;
@@ -200,8 +236,8 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
       {/* 팀장 정보 */}
       {captain && (
         <div className="bg-white rounded-lg shadow p-4 sm:p-6 border-l-4 border-red-600">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-semibold text-gray-900">{captain.name || captain.userName}</h3>
                 <span className="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">
@@ -212,6 +248,29 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
                 <p className="text-sm text-gray-600">포지션: {captain.positions.join(', ')}</p>
               )}
               <p className="text-sm text-gray-600">상태: {getStatusLabel(captain.status)}</p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min="0"
+                placeholder="등번호"
+                value={jerseyNumbers[captain.id] !== undefined ? jerseyNumbers[captain.id] : (captain.jerseyNumber || '')}
+                onChange={(e) => handleJerseyNumberChange(captain.id, e.target.value)}
+                onBlur={() => handleJerseyNumberBlur(captain.id)}
+                disabled={processingId === captain.id}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 w-20"
+              />
+              <select
+                value={captain.status}
+                onChange={(e) => handleUpdateStatus(captain.id, e.target.value as TeamMember['status'])}
+                disabled={processingId === captain.id}
+                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
+              >
+                <option value="active">활동</option>
+                <option value="injured">부상</option>
+                <option value="long_term_absence">장기 출전 불가</option>
+                <option value="short_term_absence">단기 출전 불가</option>
+              </select>
             </div>
           </div>
         </div>
@@ -244,6 +303,16 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
                     )}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="등번호"
+                      value={jerseyNumbers[member.id] !== undefined ? jerseyNumbers[member.id] : (member.jerseyNumber || '')}
+                      onChange={(e) => handleJerseyNumberChange(member.id, e.target.value)}
+                      onBlur={() => handleJerseyNumberBlur(member.id)}
+                      disabled={processingId === member.id}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 w-20"
+                    />
                     <select
                       value={member.status}
                       onChange={(e) => handleUpdateStatus(member.id, e.target.value as TeamMember['status'])}
@@ -325,6 +394,16 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
                     )}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="등번호"
+                      value={jerseyNumbers[member.id] !== undefined ? jerseyNumbers[member.id] : (member.jerseyNumber || '')}
+                      onChange={(e) => handleJerseyNumberChange(member.id, e.target.value)}
+                      onBlur={() => handleJerseyNumberBlur(member.id)}
+                      disabled={processingId === member.id}
+                      className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 w-20"
+                    />
                     <select
                       value={member.status}
                       onChange={(e) => handleUpdateStatus(member.id, e.target.value as TeamMember['status'])}
