@@ -21,40 +21,63 @@ export default function MatchRecordForm({
   onSuccess,
 }: MatchRecordFormProps) {
   const [members, setMembers] = useState<TeamMember[]>([]);
-  const [games, setGames] = useState<GameRecord[]>([
-    {
-      gameNumber: 1,
-      ourScore: 0,
-      opponentScore: 0,
-      playerRecords: [],
-    },
-  ]);
+  const [games, setGames] = useState<GameRecord[]>([]);
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
         const data = await teamsApi.getTeamMembers(teamId);
         setMembers(data);
-        // 초기 playerRecords 설정
-        const initialPlayerRecords: PlayerRecord[] = data.map((member) => ({
-          userId: member.userId,
-          userName: member.userName || member.name || '',
-          played: false,
-          goals: 0,
-          assists: 0,
-        }));
-        setGames([
-          {
-            gameNumber: 1,
-            ourScore: 0,
-            opponentScore: 0,
-            playerRecords: initialPlayerRecords,
-          },
-        ]);
+        
+        // 초기화는 한 번만 수행
+        if (!isInitialized) {
+          const initialPlayerRecords: PlayerRecord[] = data.map((member) => ({
+            userId: member.userId,
+            userName: member.userName || member.name || '',
+            played: false,
+            goals: 0,
+            assists: 0,
+          }));
+          setGames([
+            {
+              gameNumber: 1,
+              ourScore: 0,
+              opponentScore: 0,
+              playerRecords: initialPlayerRecords,
+            },
+          ]);
+          setIsInitialized(true);
+        } else {
+          // 이미 초기화된 경우, 새로운 멤버만 추가
+          const updatedGames = games.map((game) => {
+            const existingUserIds = new Set(game.playerRecords.map((pr) => pr.userId));
+            const newPlayerRecords = data
+              .filter((member) => !existingUserIds.has(member.userId))
+              .map((member) => ({
+                userId: member.userId,
+                userName: member.userName || member.name || '',
+                played: false,
+                goals: 0,
+                assists: 0,
+              }));
+            return {
+              ...game,
+              playerRecords: [...game.playerRecords, ...newPlayerRecords],
+            };
+          });
+          // 실제로 새로운 멤버가 추가된 경우에만 업데이트
+          const hasNewMembers = updatedGames.some((g, idx) => 
+            g.playerRecords.length !== games[idx]?.playerRecords.length
+          );
+          if (hasNewMembers) {
+            setGames(updatedGames);
+          }
+        }
       } catch (err: unknown) {
         setError('팀원 정보를 불러오는데 실패했습니다.');
       } finally {
@@ -63,7 +86,8 @@ export default function MatchRecordForm({
     };
 
     fetchMembers();
-  }, [teamId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamId]); // games와 isInitialized는 의존성에서 제외하여 초기화 방지
 
   const handleAddGame = () => {
     const newGameNumber = games.length + 1;

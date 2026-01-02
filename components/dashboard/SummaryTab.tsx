@@ -42,7 +42,19 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
   // 경로가 변경되어 대시보드로 돌아왔을 때 데이터 새로고침 (투표 후 돌아왔을 때)
   useEffect(() => {
     if (pathname === '/dashboard') {
-      fetchData();
+      // 투표 완료 플래그 확인
+      const attendanceVoted = localStorage.getItem('attendanceVoted');
+      if (attendanceVoted) {
+        // 플래그 제거하고 데이터 새로고침
+        localStorage.removeItem('attendanceVoted');
+        fetchData();
+      } else {
+        // 약간의 지연을 두어 다른 페이지에서 돌아왔을 때 확실히 새로고침
+        const timer = setTimeout(() => {
+          fetchData();
+        }, 100);
+        return () => clearTimeout(timer);
+      }
     }
   }, [pathname, fetchData]);
 
@@ -57,6 +69,20 @@ export default function SummaryTab({ teamId }: SummaryTabProps) {
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [fetchData, pathname]);
+
+  // 페이지 포커스 시 데이터 새로고침 (경기 상세에서 돌아왔을 때)
+  useEffect(() => {
+    const handleFocus = () => {
+      if (pathname === '/dashboard') {
+        fetchData();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      window.removeEventListener('focus', handleFocus);
     };
   }, [fetchData, pathname]);
 

@@ -26,6 +26,8 @@ export default function AttendanceVote({
     try {
       await matchesApi.voteAttendance(matchId, { status });
       setSelectedStatus(status);
+      // 투표 완료 플래그 설정 (요약탭 새로고침용)
+      localStorage.setItem('attendanceVoted', Date.now().toString());
       onVoteSuccess?.();
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || '투표에 실패했습니다.';

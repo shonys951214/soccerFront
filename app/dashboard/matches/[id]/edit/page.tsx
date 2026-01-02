@@ -1,7 +1,10 @@
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useMatchForm } from '@/lib/hooks/useMatchForm';
+import { teamsApi } from '@/lib/api/teams.api';
+import { UserTeam } from '@/lib/types/team.types';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
@@ -11,6 +14,8 @@ export default function EditMatchPage() {
   const router = useRouter();
   const params = useParams();
   const matchId = params.id as string;
+  const [userTeam, setUserTeam] = useState<UserTeam | null>(null);
+  const [isCheckingPermission, setIsCheckingPermission] = useState(true);
   
   const {
     match,
@@ -22,8 +27,37 @@ export default function EditMatchPage() {
     handleSubmit,
   } = useMatchForm(matchId);
 
-  if (isLoading) {
+  useEffect(() => {
+    const checkPermission = async () => {
+      try {
+        const teamData = await teamsApi.getMyTeam();
+        setUserTeam(teamData);
+        
+        // 팀장 또는 부팀장이 아니면 접근 불가
+        if (teamData && teamData.role !== 'captain' && teamData.role !== 'vice_captain') {
+          alert('경기 수정은 팀장 또는 부팀장만 가능합니다.');
+          router.push(`/dashboard/matches/${matchId}`);
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to check permission:', err);
+        alert('권한을 확인할 수 없습니다.');
+        router.push(`/dashboard/matches/${matchId}`);
+      } finally {
+        setIsCheckingPermission(false);
+      }
+    };
+
+    checkPermission();
+  }, [matchId, router]);
+
+  if (isCheckingPermission || isLoading) {
     return <PageLayout isLoading={true} />;
+  }
+
+  // 권한이 없으면 아무것도 렌더링하지 않음 (이미 리다이렉트됨)
+  if (!userTeam || (userTeam.role !== 'captain' && userTeam.role !== 'vice_captain')) {
+    return null;
   }
 
   if (!match) {

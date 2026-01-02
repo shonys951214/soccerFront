@@ -119,16 +119,14 @@ export default function MatchDetail({
       <div className="bg-white rounded-lg shadow p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
           <h2 className="text-lg sm:text-xl font-bold text-gray-900">경기 정보</h2>
-          {canEdit && (
+          {canEdit && userTeam && (userTeam.role === 'captain' || userTeam.role === 'vice_captain') && (
             <div className="flex flex-wrap gap-2">
               {/* 기록 입력 버튼은 팀장/부팀장만 볼 수 있음 */}
-              {userTeam && (userTeam.role === 'captain' || userTeam.role === 'vice_captain') && (
-                <Link href={`/dashboard/matches/${matchId}/record`}>
-                  <Button variant="primary" size="sm">
-                    기록 입력
-                  </Button>
-                </Link>
-              )}
+              <Link href={`/dashboard/matches/${matchId}/record`}>
+                <Button variant="primary" size="sm">
+                  기록 입력
+                </Button>
+              </Link>
               <Link href={`/dashboard/matches/${matchId}/edit`}>
                 <Button variant="outline" size="sm">
                   수정
