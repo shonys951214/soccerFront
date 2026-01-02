@@ -97,6 +97,7 @@ export default function MyTeamPage() {
               onDeleteTeam={handleDeleteTeam}
               isLeaving={isLeaving}
               isDeleting={isDeleting}
+              onTeamUpdate={refreshTeam}
             />
 
             {uploadErrorMessage && (

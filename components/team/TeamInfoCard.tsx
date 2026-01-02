@@ -1,6 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import { TeamDetail, UserTeam } from '@/lib/types/team.types';
 import { formatCreatedDate } from '@/lib/utils/format';
 import Button from '@/components/common/Button';
+import { teamsApi } from '@/lib/api/teams.api';
+import { getErrorMessage } from '@/lib/utils/error';
 
 interface TeamInfoCardProps {
   team: TeamDetail;
@@ -11,6 +16,7 @@ interface TeamInfoCardProps {
   onDeleteTeam?: () => void;
   isLeaving?: boolean;
   isDeleting?: boolean;
+  onTeamUpdate?: () => void;
 }
 
 export default function TeamInfoCard({
@@ -22,7 +28,39 @@ export default function TeamInfoCard({
   onDeleteTeam,
   isLeaving = false,
   isDeleting = false,
+  onTeamUpdate,
 }: TeamInfoCardProps) {
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [description, setDescription] = useState(team.description || '');
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const isCaptain = userTeam?.role === 'captain';
+
+  const handleSaveDescription = async () => {
+    if (!team.id) return;
+
+    setIsSaving(true);
+    setError('');
+    try {
+      await teamsApi.updateTeam(team.id, { description: description.trim() || undefined });
+      setIsEditingDescription(false);
+      if (onTeamUpdate) {
+        onTeamUpdate();
+      }
+    } catch (err) {
+      setError(getErrorMessage(err, '팀 소개글 수정에 실패했습니다.'));
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setDescription(team.description || '');
+    setIsEditingDescription(false);
+    setError('');
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {/* 팀 로고/사진 */}
@@ -42,7 +80,7 @@ export default function TeamInfoCard({
             </div>
           )}
           {/* 팀장만 로고 변경 버튼 표시 */}
-          {userTeam && userTeam.role === 'captain' && (
+          {isCaptain && (
             <div className="absolute bottom-4 right-4">
               <label className="cursor-pointer">
                 <input
@@ -84,13 +122,61 @@ export default function TeamInfoCard({
             </div>
           )}
 
-          {/* 팀 설명 */}
-          {team.description && (
-            <div>
-              <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀 소개</h3>
-              <p className="text-sm sm:text-base text-gray-900 whitespace-pre-wrap break-words">{team.description}</p>
+          {/* 팀 소개 */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-xs sm:text-sm font-medium text-gray-500">팀 소개</h3>
+              {isCaptain && !isEditingDescription && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsEditingDescription(true)}
+                  className="text-xs"
+                >
+                  수정
+                </Button>
+              )}
             </div>
-          )}
+            {isEditingDescription ? (
+              <div className="space-y-2">
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="팀 소개글을 입력하세요"
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 text-sm"
+                />
+                {error && (
+                  <p className="text-red-600 text-xs">{error}</p>
+                )}
+                <div className="flex gap-2">
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleSaveDescription}
+                    isLoading={isSaving}
+                    disabled={isSaving}
+                    className="text-xs"
+                  >
+                    저장
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCancelEdit}
+                    disabled={isSaving}
+                    className="text-xs"
+                  >
+                    취소
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm sm:text-base text-gray-900 whitespace-pre-wrap break-words">
+                {team.description || (isCaptain ? '팀 소개글을 작성해주세요.' : '팀 소개글이 없습니다.')}
+              </p>
+            )}
+          </div>
 
           {/* 팀장 정보 */}
           {team.captain && (
@@ -100,9 +186,9 @@ export default function TeamInfoCard({
             </div>
           )}
 
-          {/* 팀 시작일 */}
+          {/* 생성일 */}
           <div>
-            <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">팀 시작일</h3>
+            <h3 className="text-xs sm:text-sm font-medium text-gray-500 mb-1">생성일</h3>
             <p className="text-base sm:text-lg text-gray-900">{formatCreatedDate(team.createdAt)}</p>
           </div>
 

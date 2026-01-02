@@ -24,18 +24,21 @@ export function useTeamActions(teamId: string | null) {
 
   const handleConfirmLeave = async () => {
     if (!teamId) return;
-    
+
     if (leaveConfirmText.trim() !== '탈퇴') {
       setLeaveErrorMessage('"탈퇴"를 정확히 입력해주세요.');
       return;
     }
-    
+
     setIsLeaving(true);
     try {
       await teamsApi.leaveTeam(teamId);
       localStorage.removeItem('teamId');
+      // 팀 탈퇴 상태 저장 (알림 모달 표시용)
+      localStorage.setItem('teamRemovedReason', 'left');
       setShowLeaveModal(false);
-      router.push('/team-select');
+      // 리다이렉트는 대시보드 레이아웃에서 모달 표시 후 처리
+      router.push('/dashboard');
     } catch (err) {
       const errorMsg = getErrorMessage(err, '팀 탈퇴에 실패했습니다.');
       setLeaveErrorMessage(errorMsg);

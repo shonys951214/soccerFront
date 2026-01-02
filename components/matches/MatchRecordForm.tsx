@@ -5,8 +5,7 @@ import { matchesApi } from '@/lib/api/matches.api';
 import { teamsApi } from '@/lib/api/teams.api';
 import { RecordMatchRequest, GameRecord, PlayerRecord } from '@/lib/types/match.types';
 import { TeamMember } from '@/lib/types/team.types';
-import GameScoreInput from './GameScoreInput';
-import PlayerRecordInput from './PlayerRecordInput';
+import MatchRecordTable from './MatchRecordTable';
 import Button from '@/components/common/Button';
 import Loading from '@/components/common/Loading';
 
@@ -43,7 +42,7 @@ export default function MatchRecordForm({
         // 초기 playerRecords 설정
         const initialPlayerRecords: PlayerRecord[] = data.map((member) => ({
           userId: member.userId,
-          userName: member.userName || '',
+          userName: member.userName || member.name || '',
           played: false,
           goals: 0,
           assists: 0,
@@ -56,7 +55,7 @@ export default function MatchRecordForm({
             playerRecords: initialPlayerRecords,
           },
         ]);
-      } catch (err: any) {
+      } catch (err: unknown) {
         setError('팀원 정보를 불러오는데 실패했습니다.');
       } finally {
         setIsLoading(false);
@@ -70,7 +69,7 @@ export default function MatchRecordForm({
     const newGameNumber = games.length + 1;
     const initialPlayerRecords: PlayerRecord[] = members.map((member) => ({
       userId: member.userId,
-      userName: member.userName || '',
+      userName: member.userName || member.name || '',
       played: false,
       goals: 0,
       assists: 0,
@@ -92,19 +91,22 @@ export default function MatchRecordForm({
     }
   };
 
-  const handleGameChange = (index: number, game: GameRecord) => {
-    const newGames = [...games];
-    newGames[index] = game;
+  const handleGamesChange = (newGames: GameRecord[]) => {
     setGames(newGames);
   };
 
-  const handlePlayerRecordChange = (
-    gameIndex: number,
-    playerIndex: number,
-    record: PlayerRecord
-  ) => {
+  const handlePlayerRecordChange = (gameIndex: number, userId: string, record: PlayerRecord) => {
     const newGames = [...games];
-    newGames[gameIndex].playerRecords[playerIndex] = record;
+    const game = newGames[gameIndex];
+    const playerIndex = game.playerRecords.findIndex((pr) => pr.userId === userId);
+    
+    if (playerIndex >= 0) {
+      game.playerRecords[playerIndex] = record;
+    } else {
+      game.playerRecords.push(record);
+    }
+    
+    newGames[gameIndex] = game;
     setGames(newGames);
   };
 
@@ -133,8 +135,11 @@ export default function MatchRecordForm({
       };
       await matchesApi.recordMatch(matchId, request);
       onSuccess();
-    } catch (err: any) {
-      setError(err.response?.data?.message || '경기 기록 입력에 실패했습니다.');
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        '경기 기록 입력에 실패했습니다.';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -146,79 +151,19 @@ export default function MatchRecordForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* 게임별 점수 입력 */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">게임별 점수</h3>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleAddGame}
-          >
-            게임 추가
-          </Button>
-        </div>
-        {games.map((game, index) => (
-          <div key={index} className="relative">
-            <GameScoreInput
-              gameNumber={game.gameNumber}
-              game={game}
-              onChange={(g) => handleGameChange(index, g)}
-            />
-            {games.length > 1 && (
-              <button
-                type="button"
-                onClick={() => handleRemoveGame(index)}
-                className="absolute top-2 right-2 text-red-600 hover:text-red-700"
-              >
-                삭제
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* 선수별 기록 입력 */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">출전 멤버 및 기록</h3>
-        {games.map((game, gameIndex) => (
-          <div key={gameIndex} className="space-y-3">
-            <h4 className="font-medium text-gray-700">게임 {game.gameNumber}</h4>
-            <div className="space-y-2">
-              {members.map((member, memberIndex) => {
-                const playerRecord =
-                  game.playerRecords[memberIndex] ||
-                  ({
-                    userId: member.userId,
-                    userName: member.userName || '',
-                    played: false,
-                    goals: 0,
-                    assists: 0,
-                  } as PlayerRecord);
-
-                return (
-                  <PlayerRecordInput
-                    key={member.id}
-                    player={{
-                      id: member.userId,
-                      name: member.userName || '',
-                    }}
-                    record={playerRecord}
-                    onChange={(record) =>
-                      handlePlayerRecordChange(gameIndex, memberIndex, record)
-                    }
-                  />
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* 통합 테이블 */}
+      <MatchRecordTable
+        games={games}
+        members={members}
+        onGamesChange={handleGamesChange}
+        onPlayerRecordChange={handlePlayerRecordChange}
+        onAddGame={handleAddGame}
+        onRemoveGame={handleRemoveGame}
+      />
 
       {/* 회고 메모 */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="bg-white rounded-lg shadow p-4 sm:p-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           회고 메모 (선택)
         </label>
         <textarea
@@ -230,7 +175,11 @@ export default function MatchRecordForm({
         />
       </div>
 
-      {error && <div className="text-red-600 text-sm">{error}</div>}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded text-sm">
+          {error}
+        </div>
+      )}
 
       <div className="flex gap-3">
         <Button

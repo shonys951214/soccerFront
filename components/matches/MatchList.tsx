@@ -41,9 +41,12 @@ export default function MatchList({ teamId, canCreate = false }: MatchListProps)
   }, [teamId, year, month, fetchMatches]);
 
   const handleFilterChange = useCallback((selectedYear: number | null, selectedMonth: number | null) => {
-    setYear(selectedYear);
-    setMonth(selectedMonth);
-  }, []);
+    // 값이 실제로 변경된 경우에만 상태 업데이트
+    if (year !== selectedYear || month !== selectedMonth) {
+      setYear(selectedYear);
+      setMonth(selectedMonth);
+    }
+  }, [year, month]);
 
   const handleCreateSuccess = () => {
     fetchMatches(year, month);
@@ -57,9 +60,7 @@ export default function MatchList({ teamId, canCreate = false }: MatchListProps)
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
         <MatchFilter 
-          onFilterChange={handleFilterChange} 
-          initialYear={year}
-          initialMonth={month}
+          onFilterChange={handleFilterChange}
         />
         {canCreate && (
           <CreateMatchButton teamId={teamId} onSuccess={handleCreateSuccess} />

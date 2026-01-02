@@ -155,23 +155,25 @@ export default function MemberManagement({ teamId, userTeam }: MemberManagementP
     }
   };
 
-  const handleDeleteMember = async (memberId: string, memberName: string) => {
-    if (!confirm(`정말 ${memberName}님을 팀에서 추방하시겠습니까?`)) {
-      return;
-    }
+      const handleDeleteMember = async (memberId: string, memberName: string) => {
+        if (!confirm(`정말 ${memberName}님을 팀에서 추방하시겠습니까?`)) {
+          return;
+        }
 
-    setProcessingId(memberId);
-    try {
-      await teamsApi.deleteMember(teamId, memberId);
-      await fetchMembers();
-      alert('팀원이 추방되었습니다.');
-    } catch (err) {
-      const errorMessage = getErrorMessage(err, '팀원 추방에 실패했습니다.');
-      alert(errorMessage);
-    } finally {
-      setProcessingId(null);
-    }
-  };
+        setProcessingId(memberId);
+        try {
+          await teamsApi.deleteMember(teamId, memberId);
+          // 추방된 사용자가 현재 사용자인지 확인 (현재는 서버에서 처리하므로 항상 성공)
+          // 추방된 사용자는 다음 페이지 로드 시 모달이 표시됨
+          await fetchMembers();
+          alert('팀원이 추방되었습니다.');
+        } catch (err) {
+          const errorMessage = getErrorMessage(err, '팀원 추방에 실패했습니다.');
+          alert(errorMessage);
+        } finally {
+          setProcessingId(null);
+        }
+      };
 
   const getStatusLabel = (status: TeamMember['status']) => {
     switch (status) {

@@ -70,5 +70,8 @@ export interface JoinRequest {
   summary?: string;
   createdAt: string;
   reviewedAt?: string;
+  // 내 가입신청 조회 시 추가 정보
+  teamId?: string;
+  teamName?: string;
 }
 

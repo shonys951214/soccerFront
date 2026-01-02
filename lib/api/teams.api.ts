@@ -36,6 +36,18 @@ export const teamsApi = {
     await apiClient.put(`/teams/${teamId}/join-requests/${requestId}`, { status });
   },
 
+  // 내 가입신청 목록 조회
+  getMyJoinRequests: async (): Promise<JoinRequest[]> => {
+    const response = await apiClient.get<JoinRequest[]>('/teams/join-requests/my');
+    return response.data;
+  },
+
+  // 가입신청 취소
+  cancelJoinRequest: async (requestId: string): Promise<{ success: boolean; message: string }> => {
+    const response = await apiClient.delete<{ success: boolean; message: string }>(`/teams/join-requests/${requestId}`);
+    return response.data;
+  },
+
   // 팀 구성 통계
   getTeamStats: async (teamId: string): Promise<TeamStats> => {
     const response = await apiClient.get<TeamStats>(`/teams/${teamId}/stats`);
@@ -104,6 +116,12 @@ export const teamsApi = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;
+  },
+
+  // 팀 정보 수정
+  updateTeam: async (teamId: string, data: { description?: string; region?: string }): Promise<TeamDetail> => {
+    const response = await apiClient.put<TeamDetail>(`/teams/${teamId}`, data);
     return response.data;
   },
 };
